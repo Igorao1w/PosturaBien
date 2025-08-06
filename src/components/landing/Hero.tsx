@@ -25,7 +25,7 @@ export default function Hero() {
   )
 
   return (
-    <section id="hero" className="container mx-auto px-4 py-16 sm:py-24">
+    <section id="hero" className="container mx-auto px-4 pt-8 pb-16 sm:pt-12 sm:pb-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-bold text-primary tracking-tight">
@@ -55,13 +55,13 @@ export default function Hero() {
             <CarouselContent>
               {carouselImages.map((image, index) => (
                 <CarouselItem key={index}>
-                  <div className="p-1 aspect-square">
+                  <div className="p-1">
                     <Image
                       src={image.src}
                       alt={image.alt}
                       width={500}
                       height={500}
-                      className="rounded-lg shadow-2xl w-full h-full object-contain"
+                      className="rounded-lg shadow-2xl w-full h-full object-contain aspect-square"
                       data-ai-hint="posture corrector"
                       priority={index === 0}
                     />
