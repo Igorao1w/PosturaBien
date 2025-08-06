@@ -55,13 +55,13 @@ export default function Hero() {
             <CarouselContent>
               {carouselImages.map((image, index) => (
                 <CarouselItem key={index}>
-                  <div className="p-1">
+                  <div className="p-1 aspect-square">
                     <Image
                       src={image.src}
                       alt={image.alt}
                       width={500}
                       height={500}
-                      className="rounded-lg shadow-2xl w-full h-auto object-contain"
+                      className="rounded-lg shadow-2xl w-full h-full object-contain"
                       data-ai-hint="posture corrector"
                       priority={index === 0}
                     />
