@@ -5,14 +5,14 @@ import { Button } from '@/components/ui/button';
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+      <div className="container flex h-20 items-center">
         <div className="mr-4 flex items-center gap-2">
            <Image
             src="https://i.postimg.cc/brCxGSNw/file-00000000dc48622f97dc8d889f0fde30.png"
             alt="PosturaBien Logo"
-            width={40}
-            height={40}
-            className="h-10 w-auto"
+            width={50}
+            height={50}
+            className="h-12 w-auto"
           />
           <span className="font-bold text-lg text-primary">PosturaBien</span>
         </div>
