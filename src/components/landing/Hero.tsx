@@ -21,7 +21,7 @@ const carouselImages = [
 
 export default function Hero() {
   const plugin = useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: true, playOnInit: true, stopOnLastSnap: false })
   )
 
   return (
@@ -61,7 +61,7 @@ export default function Hero() {
                       alt={image.alt}
                       width={500}
                       height={500}
-                      className="rounded-lg shadow-2xl w-full h-auto object-cover aspect-square"
+                      className="rounded-lg shadow-2xl w-full h-auto object-contain aspect-square"
                       data-ai-hint="posture corrector"
                       priority={index === 0}
                     />
