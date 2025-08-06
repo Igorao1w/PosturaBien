@@ -1,0 +1,80 @@
+import React from 'react';
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { Star } from 'lucide-react';
+
+const testimonials = [
+  {
+    name: 'Juan P.',
+    age: 35,
+    location: 'Bogotá D.C.',
+    quote: 'Pasaba horas en la oficina y mi espalda me mataba. Con PosturaBien, he sentido un alivio increíble en mi zona lumbar. ¡Totalmente recomendado!',
+  },
+  {
+    name: 'Mariana G.',
+    age: 29,
+    location: 'Medellín',
+    quote: 'Soy diseñadora y mi mala postura era un problema. Desde que uso el corrector, me siento más erguida y con más energía. ¡Y es súper discreto debajo de la ropa!',
+  },
+  {
+    name: 'Carlos V.',
+    age: 42,
+    location: 'Cali',
+    quote: 'Pensé que el dolor de espalda alta era algo con lo que tenía que vivir. Este corrector me demostró lo contrario. Es simple, cómodo y muy efectivo.',
+  },
+  {
+    name: 'Sofía L.',
+    age: 27,
+    location: 'Barranquilla',
+    quote: 'Lo compré por recomendación y ha sido la mejor inversión. Lo uso mientras trabajo desde casa y la diferencia en mi postura y dolor es del cielo a la tierra.',
+  }
+];
+
+export default function Testimonials() {
+  return (
+    <section id="testimonials" className="bg-secondary py-16 sm:py-24">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary">Lo que dicen nuestros clientes satisfechos</h2>
+          <p className="mt-4 text-lg text-foreground max-w-2xl mx-auto">
+            Historias reales de personas que, como tú, decidieron ponerle fin al dolor de espalda.
+          </p>
+        </div>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full max-w-4xl mx-auto"
+        >
+          <CarouselContent>
+            {testimonials.map((testimonial, index) => (
+              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                <div className="p-1">
+                  <Card className="h-full flex flex-col">
+                    <CardContent className="flex flex-col items-center text-center p-6 flex-grow">
+                      <div className="flex text-yellow-500 mb-4">
+                        {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="w-5 h-5"/>)}
+                      </div>
+                      <p className="text-foreground mb-4 flex-grow">"{testimonial.quote}"</p>
+                      <div className="font-bold text-primary">{testimonial.name}</div>
+                      <div className="text-sm text-muted-foreground">{testimonial.age} años, {testimonial.location}</div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
+    </section>
+  );
+}
