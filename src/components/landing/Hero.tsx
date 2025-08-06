@@ -1,8 +1,29 @@
-import React from 'react';
+'use client';
+
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
+
+const carouselImages = [
+    { src: "https://i.postimg.cc/VNNcFhj6/corretor-11.jpg", alt: "Woman wearing posture corrector" },
+    { src: "https://i.postimg.cc/MZBJtVjy/corretor-03.gif", alt: "Animation showing posture correction" },
+    { src: "https://i.postimg.cc/9XZsy2vb/imagen-2025-07-22-194214896-1.jpg", alt: "Man wearing posture corrector at desk" },
+    { src: "https://i.postimg.cc/ZR3sPPDn/imagen-2025-07-21-232048329.jpg", alt: "Close up of posture corrector" },
+];
 
 export default function Hero() {
+  const plugin = useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  )
+
   return (
     <section id="hero" className="container mx-auto px-4 py-16 sm:py-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -25,14 +46,32 @@ export default function Hero() {
           </div>
         </div>
         <div className="flex justify-center">
-          <Image
-            src="https://i.postimg.cc/NMxVzDbC/20250806-191750-0000.png"
-            alt="Corrector de postura ortopédico PosturaBien"
-            width={500}
-            height={500}
-            className="rounded-lg shadow-2xl"
-            data-ai-hint="posture corrector"
-          />
+          <Carousel
+            plugins={[plugin.current]}
+            className="w-full max-w-lg"
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent>
+              {carouselImages.map((image, index) => (
+                <CarouselItem key={index}>
+                  <div className="p-1">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={500}
+                      height={500}
+                      className="rounded-lg shadow-2xl w-full h-auto object-cover aspect-square"
+                      data-ai-hint="posture corrector"
+                      priority={index === 0}
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-4" />
+            <CarouselNext className="right-4" />
+          </Carousel>
         </div>
       </div>
     </section>
