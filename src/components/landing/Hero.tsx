@@ -24,7 +24,7 @@ export default function Hero() {
         </div>
         <div className="flex justify-center">
           <Image
-            src="https://placehold.co/500x500.png"
+            src="https://i.postimg.cc/4Nj8wjsN/20250806-192208-0000.png"
             alt="Corrector de postura ortopédico PosturaBien"
             width={500}
             height={500}
