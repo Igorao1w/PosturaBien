@@ -40,9 +40,9 @@ export default function Benefits() {
     <section id="benefits" className="bg-secondary py-16 sm:py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary">Beneficios de Usar PosturaBien</h2>
-          <p className="mt-4 text-lg text-foreground max-w-2xl mx-auto">
-            Descubre por qué miles de colombianos han elegido PosturaBien para mejorar su calidad de vida.
+          <h2 className="text-3xl md:text-4xl font-bold text-primary [text-shadow:1px_1px_2px_rgba(0,0,0,0.1)]">Beneficios de Usar PosturaBien</h2>
+          <p className="mt-4 text-lg text-[#3C3C3C] max-w-2xl mx-auto">
+            Descubre por qué <span className="font-bold">miles de colombianos</span> han elegido PosturaBien para mejorar su calidad de vida.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
