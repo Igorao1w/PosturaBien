@@ -10,9 +10,9 @@ export default function Header() {
            <Image
             src="https://i.postimg.cc/4Nj8wjsN/20250806-192208-0000.png"
             alt="PosturaBien Logo"
-            width={50}
-            height={50}
-            className="h-12 w-auto mr-2"
+            width={60}
+            height={60}
+            className="h-16 w-auto"
           />
           <span className="font-bold text-lg text-primary-foreground">PosturaBien</span>
         </div>
