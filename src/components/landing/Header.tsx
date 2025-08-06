@@ -8,7 +8,7 @@ export default function Header() {
       <div className="container flex h-14 items-center">
         <div className="mr-2 flex items-center gap-1">
            <Image
-            src="https://i.postimg.cc/wTFjhZPt/Design-sem-nome-20250806-204625-0000.png"
+            src="https://i.postimg.cc/zfTmkRBd/Design-sem-nome-20250806-204948-0000.png"
             alt="PosturaBien Logo"
             width={50}
             height={50}
