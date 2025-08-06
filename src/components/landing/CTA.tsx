@@ -14,9 +14,10 @@ export default function CTA() {
           <Button size="lg" variant="secondary" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105">
             ¡SÍ, LO QUIERO AHORA!
           </Button>
-          <p className="mt-4 text-2xl font-bold text-accent">
-            OFERTA: $79.000 COP
-          </p>
+          <div className="mt-4 text-2xl font-bold">
+            <span className="text-red-500 line-through mr-2 decoration-2">$124.000 COP</span>
+            <span className="text-green-400">$79.000 COP</span>
+          </div>
           <div className="mt-4 flex justify-center items-center gap-6 text-primary-foreground/90">
               <div className="flex items-center gap-2">
                   <Truck className="h-5 w-5"/>

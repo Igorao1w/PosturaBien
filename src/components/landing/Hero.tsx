@@ -17,14 +17,16 @@ export default function Hero() {
             <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow">
               ¡PÍDELO AHORA Y PAGA EN CASA!
             </Button>
-            <p className="mt-2 text-sm text-muted-foreground">
-              $79.000 COP - Envío Gratis a toda Colombia
-            </p>
+            <div className="mt-2 text-md">
+                <span className="text-red-500 line-through mr-2">$124.000 COP</span>
+                <span className="text-green-600 font-bold">$79.000 COP</span>
+                <p className="text-sm text-muted-foreground">Envío Gratis a toda Colombia</p>
+            </div>
           </div>
         </div>
         <div className="flex justify-center">
           <Image
-            src="https://placehold.co/500x500.png"
+            src="https://i.postimg.cc/NMxVzDbC/20250806-191750-0000.png"
             alt="Corrector de postura ortopédico PosturaBien"
             width={500}
             height={500}
