@@ -61,7 +61,7 @@ export default function Hero() {
                       alt={image.alt}
                       width={500}
                       height={500}
-                      className="rounded-lg shadow-2xl w-full h-auto object-cover aspect-square"
+                      className="rounded-lg shadow-2xl w-full h-auto object-contain"
                       data-ai-hint="posture corrector"
                       priority={index === 0}
                     />
