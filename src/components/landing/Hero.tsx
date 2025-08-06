@@ -39,7 +39,7 @@ export default function Hero() {
               ¡PÍDELO AHORA Y PAGA EN CASA!
             </Button>
             <div className="mt-2 text-md">
-                <span className="text-red-500 line-through mr-2">$124.000 COP</span>
+                <span className="text-red-500 line-through mr-2 decoration-2">$124.000 COP</span>
                 <span className="text-green-600 font-bold">$79.000 COP</span>
                 <p className="text-sm text-muted-foreground">Envío Gratis a toda Colombia</p>
             </div>
@@ -61,7 +61,7 @@ export default function Hero() {
                       alt={image.alt}
                       width={500}
                       height={500}
-                      className="rounded-lg shadow-2xl w-full h-auto object-contain aspect-square"
+                      className="rounded-lg shadow-2xl w-full h-auto object-cover aspect-square"
                       data-ai-hint="posture corrector"
                       priority={index === 0}
                     />
