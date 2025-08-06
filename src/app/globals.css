@@ -14,14 +14,14 @@ body {
     --card-foreground: 195 20% 25%;
     --popover: 0 0% 100%;
     --popover-foreground: 195 20% 25%;
-    --primary: 195 100% 24%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 195 100% 24%; /* Azul Petróleo */
+    --primary-foreground: 0 0% 100%; /* Branco */
     --secondary: 195 60% 90%;
     --secondary-foreground: 195 100% 24%;
     --muted: 195 15% 88%;
     --muted-foreground: 195 15% 45%;
-    --accent: 47 100% 64%;
-    --accent-foreground: 195 100% 10%;
+    --accent: 47 100% 64%; /* Amarelo Solar */
+    --accent-foreground: 0 0% 11%; /* Cinza Escuro */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 195 20% 85%;
@@ -55,8 +55,8 @@ body {
     --secondary-foreground: 195 15% 95%;
     --muted: 195 20% 15%;
     --muted-foreground: 195 15% 65%;
-    --accent: 47 100% 64%;
-    --accent-foreground: 195 100% 10%;
+    --accent: 47 100% 64%; /* Amarelo Solar */
+    --accent-foreground: 0 0% 11%; /* Cinza Escuro */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 195 20% 20%;
