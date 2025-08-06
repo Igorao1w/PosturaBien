@@ -12,7 +12,7 @@ export default function Header() {
             alt="PosturaBien Logo"
             width={50}
             height={50}
-            className="h-12 w-auto"
+            className="h-12 w-auto mr-2"
           />
           <span className="font-bold text-lg text-primary-foreground">PosturaBien</span>
         </div>
