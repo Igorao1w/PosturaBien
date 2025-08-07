@@ -50,10 +50,10 @@ export default function Hero() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-bold text-primary tracking-tight">
-            ¡Dile Adiós al Dolor de Espalda y Redescubre tu Bienestar!
+            ¿Te duele la espalda y ya lo normalizaste?
           </h1>
-          <p className="mt-4 text-lg text-foreground">
-            Nuestro corrector de postura ortopédico está diseñado para aliviar el dolor, mejorar tu alineación y devolverte la confianza. Vive cada día al máximo, sin molestias.
+          <p className="mt-4 text-lg font-semibold text-foreground">
+            Entrega gratuita + Pago contra entrega en toda Colombia
           </p>
           <div className="mt-8">
             <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow">
@@ -62,7 +62,6 @@ export default function Hero() {
             <div className="mt-2 text-md">
                 <span className="text-red-500 line-through mr-2 decoration-2">$124.000 COP</span>
                 <span className="text-green-600 font-bold">$79.000 COP</span>
-                <p className="text-sm text-muted-foreground">Envío Gratis a toda Colombia</p>
             </div>
           </div>
         </div>
