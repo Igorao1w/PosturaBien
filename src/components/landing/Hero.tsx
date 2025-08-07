@@ -14,7 +14,7 @@ import Autoplay from "embla-carousel-autoplay"
 
 const carouselImages = [
     { src: "https://i.postimg.cc/VNNcFhj6/corretor-11.jpg", alt: "Woman wearing posture corrector" },
-    { src: "https://i.postimg.cc/FFpxLs90/20250806-210921-0001.gif", alt: "Animation showing posture correction", isGif: true },
+    { src: "https://i.postimg.cc/MZBJtVjy/corretor-03.gif", alt: "Animation showing posture correction", isGif: true },
     { src: "https://i.postimg.cc/9XZsy2vb/imagen-2025-07-22-194214896-1.jpg", alt: "Man wearing posture corrector at desk" },
     { src: "https://i.postimg.cc/ZR3sPPDn/imagen-2025-07-21-232048329.jpg", alt: "Close up of posture corrector" },
 ];
