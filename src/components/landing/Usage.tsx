@@ -47,6 +47,7 @@ export default function Usage() {
                   height={400}
                   className="w-full h-auto"
                   data-ai-hint={item.aiHint}
+                  unoptimized={true}
                 />
                 <div className="p-6">
                   <p className="text-primary font-bold text-lg mb-2">Paso {item.step}</p>
