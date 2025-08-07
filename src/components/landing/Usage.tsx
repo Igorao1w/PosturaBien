@@ -7,7 +7,7 @@ const usageSteps = [
     step: 1,
     title: 'Póntelo Fácilmente',
     description: 'Desliza el corrector sobre tus hombros como si fuera una mochila.',
-    image: 'https://i.postimg.cc/FsgqBQgZ/20250806-213005-0001.gif',
+    image: 'https://i.postimg.cc/8cHhSwC7/20250806-220301-0001.gif',
     aiHint: 'person putting on brace',
   },
   {
