@@ -35,6 +35,11 @@ export default function Usage() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(1);
   const [isInView, setIsInView] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,6 +90,10 @@ export default function Usage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {usageSteps.map((item) => {
             const isActive = activeStep === item.step;
+            const imageSrc = isActive && isClient
+              ? `${item.image}?t=${new Date().getTime()}`
+              : item.image;
+            
             return (
               <Card 
                 key={item.step} 
@@ -95,7 +104,7 @@ export default function Usage() {
               >
                 <CardContent className="p-0 text-center">
                   <img
-                    src={isActive ? `${item.image}?t=${new Date().getTime()}` : item.image}
+                    src={imageSrc}
                     alt={item.title}
                     className="w-full h-auto"
                     data-ai-hint={item.aiHint}
