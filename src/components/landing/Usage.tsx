@@ -21,7 +21,7 @@ const usageSteps = [
     step: 3,
     title: 'Siente la Diferencia',
     description: 'Disfruta de una postura correcta y sin dolor. Úsalo de 1 a 2 horas diarias para obtener mejores resultados.',
-    image: 'https://placehold.co/400x400.png',
+    image: 'https://i.postimg.cc/6QX5rKcN/20250806-221934-0003.gif',
     aiHint: 'person standing straight',
   },
 ];
