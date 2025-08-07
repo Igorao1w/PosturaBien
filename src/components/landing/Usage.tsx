@@ -14,7 +14,7 @@ const usageSteps = [
     step: 2,
     title: 'Ajusta las Correas',
     description: 'Tira de las correas para ajustar el nivel de tensión hasta que sientas tus hombros suavemente hacia atrás.',
-    image: 'https://placehold.co/400x400.png',
+    image: 'https://i.postimg.cc/g26nyNP3/20250806-221402-0002.gif',
     aiHint: 'adjusting straps posture corrector',
   },
   {
