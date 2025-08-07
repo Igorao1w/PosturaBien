@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 
 const usageSteps = [
@@ -40,14 +39,13 @@ export default function Usage() {
           {usageSteps.map((item) => (
             <Card key={item.step} className="overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
               <CardContent className="p-0 text-center">
-                <Image
+                <img
                   src={item.image}
                   alt={item.title}
                   width={400}
                   height={400}
                   className="w-full h-auto"
                   data-ai-hint={item.aiHint}
-                  unoptimized={true}
                 />
                 <div className="p-6">
                   <p className="text-primary font-bold text-lg mb-2">Paso {item.step}</p>
