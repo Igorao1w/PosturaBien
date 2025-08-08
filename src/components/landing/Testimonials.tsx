@@ -68,17 +68,21 @@ export default function Testimonials() {
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                 <div className="p-1">
                   <Card className="h-full flex flex-col">
-                    <CardContent className="flex flex-col items-center text-center p-6 flex-grow">
-                      <Avatar className='mb-4'>
-                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
-                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex text-yellow-500 mb-4">
+                    <CardContent className="flex flex-col text-center p-6 flex-grow">
+                      <div className="flex text-yellow-500 mb-4 mx-auto">
                         {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="w-5 h-5"/>)}
                       </div>
-                      <p className="text-foreground mb-4 flex-grow">"{testimonial.quote}"</p>
-                      <div className="font-bold text-primary">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.age} años, {testimonial.location}</div>
+                      <p className="text-foreground mb-4 flex-grow text-left">"{testimonial.quote}"</p>
+                      <div className="flex items-center gap-4 mt-auto">
+                          <Avatar>
+                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
+                            <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div className='text-left'>
+                            <div className="font-bold text-primary">{testimonial.name}</div>
+                            <div className="text-sm text-muted-foreground">{testimonial.age} años, {testimonial.location}</div>
+                          </div>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
