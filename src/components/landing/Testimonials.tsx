@@ -17,7 +17,7 @@ const testimonials = [
     age: 35,
     location: 'Bogotá D.C.',
     quote: 'Pasaba horas en la oficina y mi espalda me mataba. Con PosturaBien, he sentido un alivio increíble en mi zona lumbar. ¡Totalmente recomendado!',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://i.postimg.cc/3NTY5bh2/20250808-203223-0000.png',
     aiHint: 'man smiling'
   },
   {
@@ -25,7 +25,7 @@ const testimonials = [
     age: 29,
     location: 'Medellín',
     quote: 'Soy diseñadora y mi mala postura era un problema. Desde que uso el corrector, me siento más erguida y con más energía. ¡Y es súper discreto debajo de la ropa!',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://i.postimg.cc/8cmD1Bk9/20250808-203313-0000.png',
     aiHint: 'woman smiling'
   },
   {
