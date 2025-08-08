@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -8,6 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Star } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const testimonials = [
   {
@@ -15,24 +17,32 @@ const testimonials = [
     age: 35,
     location: 'Bogotá D.C.',
     quote: 'Pasaba horas en la oficina y mi espalda me mataba. Con PosturaBien, he sentido un alivio increíble en mi zona lumbar. ¡Totalmente recomendado!',
+    avatar: 'https://placehold.co/100x100.png',
+    aiHint: 'man smiling'
   },
   {
     name: 'Mariana G.',
     age: 29,
     location: 'Medellín',
     quote: 'Soy diseñadora y mi mala postura era un problema. Desde que uso el corrector, me siento más erguida y con más energía. ¡Y es súper discreto debajo de la ropa!',
+    avatar: 'https://placehold.co/100x100.png',
+    aiHint: 'woman smiling'
   },
   {
     name: 'Carlos V.',
     age: 42,
     location: 'Cali',
     quote: 'Pensé que el dolor de espalda alta era algo con lo que tenía que vivir. Este corrector me demostró lo contrario. Es simple, cómodo y muy efectivo.',
+    avatar: 'https://placehold.co/100x100.png',
+    aiHint: 'man portrait'
   },
   {
     name: 'Sofía L.',
     age: 27,
     location: 'Barranquilla',
     quote: 'Lo compré por recomendación y ha sido la mejor inversión. Lo uso mientras trabajo desde casa y la diferencia en mi postura y dolor es del cielo a la tierra.',
+    avatar: 'https://placehold.co/100x100.png',
+    aiHint: 'woman portrait'
   }
 ];
 
@@ -59,6 +69,10 @@ export default function Testimonials() {
                 <div className="p-1">
                   <Card className="h-full flex flex-col">
                     <CardContent className="flex flex-col items-center text-center p-6 flex-grow">
+                      <Avatar className='mb-4'>
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint={testimonial.aiHint} />
+                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
                       <div className="flex text-yellow-500 mb-4">
                         {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" className="w-5 h-5"/>)}
                       </div>

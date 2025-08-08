@@ -52,11 +52,11 @@ export default function Hero() {
           <h1 className="text-4xl md:text-5xl font-bold text-primary tracking-tight">
             ¿Te duele la espalda y ya lo normalizaste?
           </h1>
-          <p className="mt-4 text-lg font-semibold text-foreground">
-            Entrega gratuita + Pago contra entrega en toda Colombia
-          </p>
-          <p className="mt-2 text-md text-foreground/80">
+          <p className="mt-4 text-md text-foreground/80">
             Cada día que lo ignoras, tu postura empeora.
+          </p>
+          <p className="mt-2 text-lg font-semibold text-foreground">
+            Entrega gratuita + Pago contra entrega en toda Colombia
           </p>
           <div className="mt-8">
             <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow">
