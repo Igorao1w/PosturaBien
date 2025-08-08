@@ -55,6 +55,9 @@ export default function Hero() {
           <p className="mt-4 text-lg font-semibold text-foreground">
             Entrega gratuita + Pago contra entrega en toda Colombia
           </p>
+          <p className="mt-2 text-md text-foreground/80">
+            Cada día que lo ignoras, tu postura empeora.
+          </p>
           <div className="mt-8">
             <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow">
               ¡PÍDELO AHORA Y PAGA EN CASA!

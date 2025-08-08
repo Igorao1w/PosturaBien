@@ -17,8 +17,8 @@ export default function Header() {
           <span className="font-bold text-lg text-primary-foreground">PosturaBien</span>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button style={{ backgroundColor: '#FF8800', color: 'black' }} className="font-bold">
-            ¡COMPRAR AHORA!
+          <Button style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold">
+            ¡PÍDELO HOY Y RECÍBELO EN CASA!
           </Button>
         </div>
       </div>
