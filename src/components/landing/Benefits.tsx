@@ -45,14 +45,14 @@ export default function Benefits() {
             Descubre por qué <span className="font-bold">miles de colombianos</span> han elegido PosturaBien para mejorar su calidad de vida.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {benefits.map((benefit, index) => (
             <Card key={index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader>
                 <div className="mx-auto bg-card p-4 rounded-full w-fit">
                   {benefit.icon}
                 </div>
-                <CardTitle className="mt-4 text-primary">{benefit.title}</CardTitle>
+                <CardTitle className="mt-4 text-primary text-xl">{benefit.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-foreground">{benefit.description}</p>

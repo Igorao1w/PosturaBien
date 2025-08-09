@@ -59,7 +59,7 @@ export default function Hero() {
             Entrega gratuita + Pago contra entrega en toda Colombia
           </p>
           <div className="mt-8">
-            <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow">
+            <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto">
               ¡PÍDELO AHORA Y PAGA EN CASA!
             </Button>
             <div className="mt-2 text-md">
@@ -72,7 +72,7 @@ export default function Hero() {
           <Carousel
             setApi={setApi}
             plugins={[plugin.current]}
-            className="w-full max-w-lg"
+            className="w-full max-w-md"
             onMouseEnter={plugin.current.stop}
             onMouseLeave={plugin.current.reset}
           >
@@ -93,8 +93,8 @@ export default function Hero() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-4" />
-            <CarouselNext className="right-4" />
+            <CarouselPrevious className="left-2 sm:left-4" />
+            <CarouselNext className="right-2 sm:right-4" />
           </Carousel>
         </div>
       </div>
