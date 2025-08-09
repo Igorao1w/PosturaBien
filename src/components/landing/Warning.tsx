@@ -21,7 +21,7 @@ export default function Warning() {
   return (
     <section id="warning" className="bg-background py-16 sm:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 max-w-2xl mx-auto">
+        <div className="text-center mb-12 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-primary">¿Qué pasa si no haces nada?</h2>
           <div className="mt-8 space-y-6">
             {warnings.map((warning, index) => (
