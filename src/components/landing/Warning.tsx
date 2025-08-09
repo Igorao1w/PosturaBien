@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 
@@ -30,9 +31,11 @@ export default function Warning() {
               </div>
             ))}
           </div>
-          <p className="mt-12 text-2xl font-bold text-foreground">
-            Corregir tu postura no es estética. Es supervivencia.
-          </p>
+          <div className="mt-12">
+            <p className="inline-block bg-card text-foreground text-2xl font-bold p-4 rounded-lg shadow-md">
+              Corregir tu postura no es estética. Es supervivencia.
+            </p>
+          </div>
         </div>
       </div>
     </section>
