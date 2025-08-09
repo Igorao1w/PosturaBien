@@ -30,7 +30,7 @@ export default function Warning() {
               </div>
             ))}
           </div>
-          <p className="mt-12 text-2xl font-bold text-primary [text-shadow:1px_1px_1px_rgba(0,0,0,0.1)]">
+          <p className="mt-12 text-2xl font-bold text-foreground [text-shadow:1px_1px_1px_rgba(0,0,0,0.1)]">
             Corregir tu postura no es estética. Es supervivencia.
           </p>
         </div>
