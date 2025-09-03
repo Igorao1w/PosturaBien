@@ -2,7 +2,11 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Truck, Wallet } from 'lucide-react';
 
-export default function CTA() {
+interface CTAProps {
+  onOrderNow: () => void;
+}
+
+export default function CTA({ onOrderNow }: CTAProps) {
   return (
     <section id="cta" className="bg-primary text-primary-foreground py-16 sm:py-24">
       <div className="container mx-auto px-4 text-center">
@@ -11,7 +15,13 @@ export default function CTA() {
           Únete a los miles que ya han transformado su vida con PosturaBien. Tu espalda te lo agradecerá.
         </p>
         <div className="mt-8">
-          <Button size="lg" variant="secondary" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 w-full sm:w-auto">
+          <Button 
+            size="lg" 
+            variant="secondary" 
+            style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} 
+            className="font-bold text-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 w-full sm:w-auto"
+            onClick={onOrderNow}
+          >
             ¡SÍ, LO QUIERO AHORA!
           </Button>
           <div className="mt-4 text-2xl font-bold">

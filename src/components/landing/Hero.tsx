@@ -19,7 +19,11 @@ const carouselImages = [
     { src: "https://i.postimg.cc/ZR3sPPDn/imagen-2025-07-21-232048329.jpg", alt: "Close up of posture corrector" },
 ];
 
-export default function Hero() {
+interface HeroProps {
+  onOrderNow: () => void;
+}
+
+export default function Hero({ onOrderNow }: HeroProps) {
   const plugin = useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true, playOnInit: true, stopOnLastSnap: false })
   )
@@ -59,7 +63,12 @@ export default function Hero() {
             Entrega gratuita + Pago contra entrega en toda Colombia
           </p>
           <div className="mt-8">
-            <Button size="lg" style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto">
+            <Button 
+              size="lg" 
+              style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} 
+              className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto"
+              onClick={onOrderNow}
+            >
               ¡PÍDELO AHORA Y PAGA EN CASA!
             </Button>
             <div className="mt-2 text-md">

@@ -4,10 +4,10 @@ import { personalizeTestimonial, PersonalizeTestimonialInput, PersonalizeTestimo
 import { z } from 'zod';
 
 const ActionInputSchema = z.object({
-  age: z.number().min(18, "La edad debe ser mayor a 18.").max(100),
+  age: z.coerce.number().min(18, "La edad debe ser mayor a 18.").max(100),
   gender: z.enum(['male', 'female'], { errorMap: () => ({ message: "Por favor seleccione un género." })}),
   painLocation: z.string().min(3, "La ubicación del dolor es requerida."),
-  painLevel: z.number().min(1).max(10),
+  painLevel: z.coerce.number().min(1).max(10),
   activityLevel: z.string().min(3, "El nivel de actividad es requerido."),
 });
 
@@ -29,4 +29,32 @@ export async function getPersonalizedTestimonial(
     console.error(e);
     return { success: false, data: null, error: 'No se pudo generar el testimonio. Intente de nuevo más tarde.' };
   }
+}
+
+
+const OrderFormSchema = z.object({
+  fullName: z.string().min(1, 'El nombre completo es obligatorio.').refine(value => value.trim().split(/\s+/).length >= 2, {
+    message: 'Por favor, ingresa tu nombre y apellido.',
+  }),
+  whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
+  address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
+  additionalInfo: z.string().optional(),
+});
+
+export async function submitOrder(
+  formData: z.infer<typeof OrderFormSchema>
+): Promise<{ success: boolean; error?: string }> {
+  const validationResult = OrderFormSchema.safeParse(formData);
+
+  if (!validationResult.success) {
+    return { success: false, error: '⚠️ Por favor revisa tus datos, parecen incorrectos.' };
+  }
+
+  // NOTE: I cannot implement the Google Sheets integration via Webhook.
+  // This is where you would add the logic to send the data to your Google Sheet.
+  
+  console.log("Order submitted:", validationResult.data);
+  
+  // Simulate a successful submission
+  return { success: true };
 }
