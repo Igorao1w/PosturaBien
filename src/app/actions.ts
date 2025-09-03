@@ -50,11 +50,28 @@ export async function submitOrder(
     return { success: false, error: '⚠️ Por favor revisa tus datos, parecen incorrectos.' };
   }
 
-  // NOTE: I cannot implement the Google Sheets integration via Webhook.
-  // This is where you would add the logic to send the data to your Google Sheet.
+  const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
+  
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(validationResult.data),
+    });
+
+    if (!response.ok) {
+      console.error('Webhook response not OK:', await response.text());
+      return { success: false, error: 'No se pudo procesar el pedido. Intente de nuevo.' };
+    }
+
+  } catch (error) {
+    console.error('Error sending data to webhook:', error);
+    return { success: false, error: 'Ocurrió un error de red. Por favor, inténtelo de nuevo.' };
+  }
   
   console.log("Order submitted:", validationResult.data);
   
-  // Simulate a successful submission
   return { success: true };
 }
