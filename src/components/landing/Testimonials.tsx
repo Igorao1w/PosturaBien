@@ -33,7 +33,7 @@ const testimonials = [
     age: 42,
     location: 'Cali',
     quote: 'Pensé que el dolor de espalda alta era algo con lo que tenía que vivir. Este corrector me demostró lo contrario. Es simple, cómodo y muy efectivo.',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://i.postimg.cc/KvFhNhnW/IMG-20250904-191635-1.jpg',
     aiHint: 'man portrait'
   },
   {
@@ -41,7 +41,7 @@ const testimonials = [
     age: 27,
     location: 'Barranquilla',
     quote: 'Lo compré por recomendación y ha sido la mejor inversión. Lo uso mientras trabajo desde casa y la diferencia en mi postura y dolor es del cielo a la tierra.',
-    avatar: 'https://placehold.co/100x100.png',
+    avatar: 'https://i.postimg.cc/vHzF22hZ/Screenshot-2025-09-04-19-18-24-294-com-android-chrome-edit.jpg',
     aiHint: 'woman portrait'
   }
 ];
