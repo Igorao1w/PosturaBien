@@ -10,7 +10,7 @@ export default function Header({ onOrderNow }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-primary text-primary-foreground">
       <div className="container flex h-16 items-center px-4">
-        <div className="mr-2 flex items-center gap-1">
+        <div className="mr-2 flex items-center gap-2">
            <Image
             src="https://i.postimg.cc/zfTmkRBd/Design-sem-nome-20250806-204948-0000.png"
             alt="PosturaBien Logo"
@@ -18,7 +18,7 @@ export default function Header({ onOrderNow }: HeaderProps) {
             height={50}
             className="h-14 w-auto"
           />
-          <span className="hidden sm:inline-block font-bold text-lg text-primary-foreground">PosturaBien</span>
+          <span className="font-bold text-lg text-primary-foreground">PosturaBien</span>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <Button 
