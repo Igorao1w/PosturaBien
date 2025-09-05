@@ -54,19 +54,19 @@ export default function Hero({ onOrderNow }: HeroProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-bold text-primary tracking-tight">
-            ¿Te duele la espalda y ya lo normalizaste?
+            ¿Tu espalda duele tanto que ya lo aceptaste como normal?
           </h1>
           <p className="mt-4 text-md text-foreground/80">
             Cada día que lo ignoras, tu postura empeora.
           </p>
-          <p className="mt-2 text-lg font-semibold text-foreground">
+          <p className="mt-2 text-lg font-bold text-foreground">
             Entrega gratuita + Pago contra entrega en toda Colombia
           </p>
           <div className="mt-8">
             <Button 
               size="lg" 
               style={{ backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))' }} 
-              className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto"
+              className="font-bold text-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto px-6 py-3 hover:bg-[#E6B800]"
               onClick={onOrderNow}
             >
               ¡PÍDELO AHORA Y PAGA EN CASA!
