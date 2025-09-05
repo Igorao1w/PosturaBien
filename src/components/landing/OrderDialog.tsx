@@ -39,7 +39,10 @@ export default function OrderDialog({ open, onOpenChange }: OrderDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="p-0 max-w-lg rounded-xl shadow-2xl">
+      <DialogContent 
+        className="p-0 max-w-lg rounded-xl shadow-2xl"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
          <DialogHeader className="sr-only">
           <DialogTitle>Formulario de Pedido</DialogTitle>
           <DialogDescription>Complete la información a continuación para realizar su pedido.</DialogDescription>
