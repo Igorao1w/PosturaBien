@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitOrder } from '@/app/actions';
-import { Loader2, CheckCircle, Package, MessageSquare } from 'lucide-react';
+import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck, Lock } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 
 const formSchema = z.object({
@@ -27,6 +27,13 @@ type OrderFormValues = z.infer<typeof formSchema>;
 interface OrderFormProps {
   onSuccess: () => void;
 }
+
+const InputField = ({ field, placeholder, icon }: { field: any, placeholder: string, icon: string }) => (
+    <div className="relative flex items-center">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">{icon}</span>
+        <Input placeholder={placeholder} {...field} className="pl-10" />
+    </div>
+);
 
 export default function OrderForm({ onSuccess }: OrderFormProps) {
   const [isPending, startTransition] = useTransition();
@@ -66,9 +73,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           name="fullName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre completo</FormLabel>
               <FormControl>
-                <Input placeholder="Tu nombre y apellido" {...field} />
+                <InputField field={field} placeholder="👤 Nombre completo" icon="👤" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,9 +85,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           name="whatsapp"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Número de WhatsApp</FormLabel>
               <FormControl>
-                <Input type="tel" placeholder="3XX XXX XXXX" {...field} />
+                <InputField field={field} placeholder="📱 3XX XXX XXXX" icon="📱" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,9 +97,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Dirección completa</FormLabel>
               <FormControl>
-                <Input placeholder="Calle, barrio, ciudad, departamento" {...field} />
+                <InputField field={field} placeholder="📍 Dirección completa" icon="📍" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,9 +109,11 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           name="additionalInfo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Referencia adicional (opcional)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Casa de color, apartamento, etc." {...field} />
+                <div className="relative flex items-center">
+                    <span className="absolute left-3 top-3 text-lg">🏠</span>
+                    <Textarea placeholder="🏠 Referencia adicional (opcional)" {...field} className="pl-10" />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -116,7 +122,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
         <Button 
           type="submit" 
           disabled={isPending} 
-          className="w-full font-bold text-lg"
+          className="w-full font-bold text-lg h-12"
           style={{ backgroundColor: '#FFD447', color: 'black' }}
         >
           {isPending ? (
@@ -125,10 +131,14 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
               Procesando...
             </>
           ) : (
-            'CONFIRMAR PEDIDO'
+            '✅ CONFIRMAR PEDIDO'
           )}
         </Button>
       </form>
+      <div className="mt-4 text-center text-xs text-muted-foreground space-y-1">
+        <p className="flex items-center justify-center gap-1.5"><Lock className="w-3 h-3"/> Compra 100% segura. Tus datos están protegidos.</p>
+        <p className="flex items-center justify-center gap-1.5"><MessageSquare className="w-3 h-3"/> Nuestro equipo se pondrá en contacto por WhatsApp para confirmar tu pedido.</p>
+      </div>
     </Form>
   );
 }

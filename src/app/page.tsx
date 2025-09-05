@@ -10,7 +10,7 @@ import Testimonials from '@/components/landing/Testimonials';
 import PersonalizedTestimonial from '@/components/landing/PersonalizedTestimonial';
 import CTA from '@/components/landing/CTA';
 import Footer from '@/components/landing/Footer';
-import OrderSheet from '@/components/landing/OrderSheet';
+import OrderDialog from '@/components/landing/OrderDialog';
 
 export default function Home() {
   const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false);
@@ -47,7 +47,7 @@ export default function Home() {
         <CTA onOrderNow={handleOpenOrderSheet} />
       </main>
       <Footer />
-      <OrderSheet open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen} />
+      <OrderDialog open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen} />
     </div>
   );
 }
