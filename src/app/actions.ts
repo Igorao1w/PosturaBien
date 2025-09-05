@@ -39,6 +39,7 @@ const OrderFormSchema = z.object({
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   additionalInfo: z.string().optional(),
+  orderBump: z.boolean().default(false),
 });
 
 export async function submitOrder(

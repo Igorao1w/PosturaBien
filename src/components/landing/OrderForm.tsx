@@ -1,17 +1,19 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Image from 'next/image';
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitOrder } from '@/app/actions';
-import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck, Lock } from 'lucide-react';
+import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
+import { Checkbox } from '../ui/checkbox';
 
 const formSchema = z.object({
   fullName: z.string().min(1, 'El nombre completo es obligatorio.').refine(value => value.trim().split(/\s+/).length >= 2, {
@@ -20,6 +22,7 @@ const formSchema = z.object({
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   additionalInfo: z.string().optional(),
+  orderBump: z.boolean().default(false),
 });
 
 type OrderFormValues = z.infer<typeof formSchema>;
@@ -36,7 +39,7 @@ const InputField = ({ field, placeholder, icon }: { field: any, placeholder: str
 );
 
 export default function OrderForm({ onSuccess }: OrderFormProps) {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = React.useTransition();
   const { toast } = useToast();
 
   const form = useForm<OrderFormValues>({
@@ -46,6 +49,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
       whatsapp: '',
       address: '',
       additionalInfo: '',
+      orderBump: false,
     },
   });
 
@@ -122,8 +126,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
         <Button 
           type="submit" 
           disabled={isPending} 
-          className="w-full font-bold text-lg h-12"
-          style={{ backgroundColor: '#FFD447', color: 'black' }}
+          className="w-full font-bold text-lg h-12 bg-[#FFD447] text-black hover:bg-[#E6B800]"
         >
           {isPending ? (
             <>
@@ -135,9 +138,53 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           )}
         </Button>
       </form>
-      <div className="mt-4 text-center text-xs text-muted-foreground space-y-1">
-        <p className="flex items-center justify-center gap-1.5"><Lock className="w-3 h-3"/> Compra 100% segura. Tus datos están protegidos.</p>
-        <p className="flex items-center justify-center gap-1.5"><MessageSquare className="w-3 h-3"/> Nuestro equipo se pondrá en contacto por WhatsApp para confirmar tu pedido.</p>
+      <div className="mt-6 space-y-6">
+        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <ShieldCheck className="w-5 h-5 text-green-600" />
+          <p>
+            <strong>Compra 100% segura.</strong> Garantía de satisfacción.
+          </p>
+        </div>
+        
+        <div className="relative mx-auto w-32 h-32">
+          <Image
+            src="https://i.postimg.cc/zfTmkRBd/Design-sem-nome-20250806-204948-0000.png"
+            alt="Producto PosturaBien"
+            width={128}
+            height={128}
+            className="rounded-md"
+          />
+          <div className="absolute -bottom-2 -right-8 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-md transform -rotate-12">
+            Más vendido en Colombia
+          </div>
+        </div>
+
+        <FormField
+          control={form.control}
+          name="orderBump"
+          render={({ field }) => (
+            <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-secondary">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel className="font-bold text-base cursor-pointer">
+                  ¡Sí! Quiero agregar un corrector adicional por solo $59.000 COP
+                </FormLabel>
+                <p className="text-sm text-muted-foreground">
+                    Aprovecha esta oferta exclusiva y llévate el segundo con un gran descuento. ¡Ideal para regalar o tener uno de repuesto!
+                </p>
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <div className="mt-4 text-center text-xs text-muted-foreground">
+            <p className="flex items-center justify-center gap-1.5"><MessageSquare className="w-3 h-3"/> Nuestro equipo se pondrá en contacto por WhatsApp para confirmar tu pedido.</p>
+        </div>
       </div>
     </Form>
   );
