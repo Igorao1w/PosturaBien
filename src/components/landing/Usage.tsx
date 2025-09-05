@@ -11,7 +11,7 @@ const usageSteps = [
     description: 'Desliza el corrector sobre tus hombros como si fuera una mochila y abróchate el cinturón.',
     image: 'https://i.postimg.cc/8cHhSwC7/20250806-220301-0001.gif',
     aiHint: 'person putting on brace',
-    duration: 3000, // Estimated duration of the GIF in ms
+    duration: 3000,
   },
   {
     step: 2,
@@ -51,21 +51,21 @@ export default function Usage() {
       }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isInView) {
+    if (isInView && isClient) {
       const currentStepDuration = usageSteps.find(s => s.step === activeStep)?.duration || 3000;
       timer = setTimeout(() => {
         setActiveStep((prevStep) => (prevStep % usageSteps.length) + 1);
@@ -75,7 +75,7 @@ export default function Usage() {
         setActiveStep(1);
     }
     return () => clearTimeout(timer);
-  }, [activeStep, isInView]);
+  }, [activeStep, isInView, isClient]);
   
 
   return (
@@ -91,7 +91,7 @@ export default function Usage() {
           {usageSteps.map((item) => {
             const isActive = activeStep === item.step;
             const imageSrc = isActive && isClient
-              ? `${item.image}?t=${new Date().getTime()}`
+              ? `${item.image}?t=${Date.now()}` // Use Date.now() for unique key
               : item.image;
             
             return (
@@ -103,6 +103,7 @@ export default function Usage() {
                 )}
               >
                 <CardContent className="p-0 text-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imageSrc}
                     alt={item.title}
@@ -113,6 +114,7 @@ export default function Usage() {
                     <p className="text-primary font-bold text-lg mb-2">Paso {item.step}</p>
                     <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
+
                   </div>
                 </CardContent>
               </Card>
