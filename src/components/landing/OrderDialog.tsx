@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import OrderForm, { OrderConfirmation } from './OrderForm';
 import { Button } from '../ui/button';
@@ -34,6 +37,10 @@ export default function OrderDialog({ open, onOpenChange }: OrderDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="p-0 max-w-md rounded-xl">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Formulario de Pedido</DialogTitle>
+          <DialogDescription>Complete la información a continuación para realizar su pedido.</DialogDescription>
+        </DialogHeader>
         {isSubmitted ? (
             <div className="p-6">
                 <OrderConfirmation />
