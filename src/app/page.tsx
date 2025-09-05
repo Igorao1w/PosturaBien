@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/landing/Header';
 import Hero from '@/components/landing/Hero';
 import Benefits from '@/components/landing/Benefits';
@@ -14,14 +14,29 @@ import OrderSheet from '@/components/landing/OrderSheet';
 
 export default function Home() {
   const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false);
+  const [isHeaderButtonVisible, setIsHeaderButtonVisible] = useState(false);
 
   const handleOpenOrderSheet = () => {
     setIsOrderSheetOpen(true);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button after scrolling past 500px, which is roughly the hero section height
+      if (window.scrollY > 500) {
+        setIsHeaderButtonVisible(true);
+      } else {
+        setIsHeaderButtonVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header onOrderNow={handleOpenOrderSheet} />
+      <Header onOrderNow={handleOpenOrderSheet} showButton={isHeaderButtonVisible} />
       <main className="flex-grow">
         <Hero onOrderNow={handleOpenOrderSheet} />
         <Benefits />
