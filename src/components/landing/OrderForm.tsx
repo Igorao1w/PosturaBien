@@ -57,8 +57,13 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
-        const audio = new Audio('/audio/VID_20250905_210318.mp3');
-        audio.play();
+        try {
+          const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
+          audio.volume = 0.6;
+          audio.play();
+        } catch (error) {
+          console.error("Failed to play confirmation sound:", error);
+        }
         onSuccess();
         form.reset();
       } else {
