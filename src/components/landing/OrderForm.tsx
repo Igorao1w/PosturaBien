@@ -205,7 +205,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 export function OrderConfirmation() {
     return (
         <div className="flex flex-col items-center justify-center text-center p-4 animate-in fade-in-0 duration-600">
-            <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
+            <CheckCircle className="w-16 h-16 text-green-500 mb-4 animate-confirm-icon" />
             <h2 className="text-2xl font-bold text-primary mb-2">¡Gracias por tu pedido!</h2>
             <p className="text-foreground mb-6">Tu solicitud fue registrada con éxito.</p>
             <Card className="w-full text-left bg-secondary border-primary/20">
