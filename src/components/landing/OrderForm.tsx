@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -57,13 +57,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
-        try {
-          const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
-          audio.volume = 0.6;
-          audio.play();
-        } catch (error) {
-          console.error("Failed to play confirmation sound:", error);
-        }
         onSuccess();
         form.reset();
       } else {
@@ -198,6 +191,16 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 }
 
 export function OrderConfirmation() {
+    useEffect(() => {
+        try {
+            const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
+            audio.volume = 0.6;
+            audio.play();
+        } catch (error) {
+            console.error("Failed to play confirmation sound:", error);
+        }
+    }, []);
+
     return (
         <div className="flex flex-col items-center justify-center text-center p-4">
             <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
