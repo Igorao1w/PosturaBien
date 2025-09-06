@@ -57,6 +57,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
+        const audio = new Audio('/audio/VID_20250905_210318.mp3');
+        audio.play();
         onSuccess();
         form.reset();
       } else {
