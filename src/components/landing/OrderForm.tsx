@@ -54,25 +54,20 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
   });
 
   const onSubmit = (values: OrderFormValues) => {
-    try {
-        const audio = document.getElementById("confirmSound") as HTMLAudioElement;
-        if (audio) {
-          audio.volume = 0.6;
-          audio.pause();
-          audio.currentTime = 0;
-          setTimeout(() => {
-            audio.play().catch(function(error) {
-              console.error("Error al reproducir audio:", error);
-            });
-          }, 50);
-        }
-    } catch (error) {
-        console.error("Failed to play confirmation sound:", error);
-    }
-    
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
+        try {
+            const audio = document.getElementById("confirmSound") as HTMLAudioElement;
+            if (audio) {
+              audio.volume = 0.6;
+              audio.play().catch(function(error) {
+                console.error("Error al reproducir audio:", error);
+              });
+            }
+        } catch (error) {
+            console.error("Failed to play confirmation sound:", error);
+        }
         onSuccess();
         form.reset();
       } else {
