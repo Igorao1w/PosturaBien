@@ -57,17 +57,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
-        try {
-            const audio = document.getElementById("confirmSound") as HTMLAudioElement;
-            if (audio) {
-              audio.volume = 0.6;
-              audio.play().catch(function(error) {
-                console.error("Error al reproducir audio:", error);
-              });
-            }
-        } catch (error) {
-            console.error("Failed to play confirmation sound:", error);
-        }
         onSuccess();
         form.reset();
       } else {
@@ -82,7 +71,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
   return (
     <Form {...form}>
-      <audio id="confirmSound" preload="auto" src="https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1"></audio>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
