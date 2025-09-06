@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -54,6 +54,17 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
   });
 
   const onSubmit = (values: OrderFormValues) => {
+    try {
+        const audio = document.getElementById("confirmSound") as HTMLAudioElement;
+        if (audio) {
+          audio.volume = 0.6;
+          audio.currentTime = 0;
+          audio.play();
+        }
+    } catch (error) {
+        console.error("Failed to play confirmation sound:", error);
+    }
+    
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
@@ -71,6 +82,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
   return (
     <Form {...form}>
+      <audio id="confirmSound" preload="auto" src="https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1"></audio>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
@@ -191,18 +203,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 }
 
 export function OrderConfirmation() {
-    useEffect(() => {
-        try {
-            const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
-            audio.volume = 0.6;
-            audio.play();
-        } catch (error) {
-            console.error("Failed to play confirmation sound:", error);
-        }
-    }, []);
-
     return (
-        <div className="flex flex-col items-center justify-center text-center p-4">
+        <div className="flex flex-col items-center justify-center text-center p-4 animate-in fade-in-0 duration-600">
             <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
             <h2 className="text-2xl font-bold text-primary mb-2">¡Gracias por tu pedido!</h2>
             <p className="text-foreground mb-6">Tu solicitud fue registrada con éxito.</p>
