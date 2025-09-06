@@ -60,9 +60,11 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           audio.volume = 0.6;
           audio.pause();
           audio.currentTime = 0;
-          audio.play().catch(function(error) {
-            console.error("Error al reproducir audio:", error);
-          });
+          setTimeout(() => {
+            audio.play().catch(function(error) {
+              console.error("Error al reproducir audio:", error);
+            });
+          }, 50);
         }
     } catch (error) {
         console.error("Failed to play confirmation sound:", error);
