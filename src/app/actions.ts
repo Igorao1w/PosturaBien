@@ -48,7 +48,8 @@ export async function submitOrder(
   const validationResult = OrderFormSchema.safeParse(formData);
 
   if (!validationResult.success) {
-    return { success: false, error: '⚠️ Por favor revisa tus datos, parecen incorrectos.' };
+    const errorMessage = validationResult.error.errors.map(e => `-${e.message}`).join('\n');
+    return { success: false, error: `⚠️ Por favor revisa tus datos:\n${errorMessage}` };
   }
 
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
@@ -63,13 +64,18 @@ export async function submitOrder(
     });
 
     if (!response.ok) {
-      console.error('Webhook response not OK:', await response.text());
-      return { success: false, error: 'No se pudo procesar el pedido. Intente de nuevo.' };
+      const errorBody = await response.text();
+      console.error('Webhook response not OK:', response.status, errorBody);
+      return { success: false, error: `No se pudo procesar el pedido (Error: ${response.status}). Por favor, verifica tus datos e intenta de nuevo.` };
     }
 
   } catch (error) {
     console.error('Error sending data to webhook:', error);
-    return { success: false, error: 'Ocurrió un error de red. Por favor, inténtelo de nuevo.' };
+    // Check for specific error types if needed
+    if (error instanceof Error && 'cause' in error && (error.cause as any)?.code === 'ENOTFOUND') {
+         return { success: false, error: 'Ocurrió un error de red. Por favor, revisa tu conexión a internet e inténtalo de nuevo.' };
+    }
+    return { success: false, error: 'Ocurrió un error inesperado al enviar tu pedido. Por favor, inténtelo de nuevo más tarde.' };
   }
   
   console.log("Order submitted:", validationResult.data);
