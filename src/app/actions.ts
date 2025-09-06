@@ -4,7 +4,9 @@ import { personalizeTestimonial, PersonalizeTestimonialInput, PersonalizeTestimo
 import { z } from 'zod';
 
 const ActionInputSchema = z.object({
-  age: z.coerce.number().min(18, "La edad debe ser mayor a 18.").max(100),
+  age: z.coerce.number()
+    .min(18, "La edad debe ser mayor a 18.")
+    .max(100, "La edad no puede ser mayor a 100."),
   gender: z.enum(['male', 'female'], { errorMap: () => ({ message: "Por favor seleccione un género." })}),
   painLocation: z.string().min(3, "La ubicación del dolor es requerida."),
   painLevel: z.coerce.number().min(1).max(10),
@@ -71,7 +73,6 @@ export async function submitOrder(
 
   } catch (error) {
     console.error('Error sending data to webhook:', error);
-    // Check for specific error types if needed
     if (error instanceof Error && 'cause' in error && (error.cause as any)?.code === 'ENOTFOUND') {
          return { success: false, error: 'Ocurrió un error de red. Por favor, revisa tu conexión a internet e inténtalo de nuevo.' };
     }
