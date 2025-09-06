@@ -58,8 +58,11 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
         const audio = document.getElementById("confirmSound") as HTMLAudioElement;
         if (audio) {
           audio.volume = 0.6;
+          audio.pause();
           audio.currentTime = 0;
-          audio.play();
+          audio.play().catch(function(error) {
+            console.error("Error al reproducir audio:", error);
+          });
         }
     } catch (error) {
         console.error("Failed to play confirmation sound:", error);
@@ -204,7 +207,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
 export function OrderConfirmation() {
     return (
-        <div className="flex flex-col items-center justify-center text-center p-4 animate-in fade-in-0 duration-600">
+        <div className="flex flex-col items-center justify-center text-center p-4 animate-in fade-in-0 duration-1000">
             <CheckCircle className="w-16 h-16 text-green-500 mb-4 animate-confirm-icon" />
             <h2 className="text-2xl font-bold text-primary mb-2">¡Gracias por tu pedido!</h2>
             <p className="text-foreground mb-6">Tu solicitud fue registrada con éxito.</p>
