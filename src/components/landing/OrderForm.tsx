@@ -41,7 +41,15 @@ const InputField = ({ field, placeholder, icon }: { field: any, placeholder: str
 export default function OrderForm({ onSuccess }: OrderFormProps) {
   const [isPending, startTransition] = React.useTransition();
   const { toast } = useToast();
-  const audioRef = React.useRef<HTMLAudioElement>(null);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  React.useEffect(() => {
+    // Create audio element on the client side
+    const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
+    audio.preload = "auto";
+    audio.volume = 0.6;
+    audioRef.current = audio;
+  }, []);
 
 
   const form = useForm<OrderFormValues>({
@@ -57,13 +65,13 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
   const onSubmit = (values: OrderFormValues) => {
     
-    const audio = document.getElementById("confirmSound") as HTMLAudioElement;
-    if (audio) {
-      audio.volume = 0.6;
+    if (audioRef.current) {
+      const audio = audioRef.current;
+      audio.pause();
       audio.currentTime = 0;
-      audio.play().catch(error => {
-        console.error("Audio playback failed:", error);
-      });
+      setTimeout(() => {
+        audio.play().catch(e => console.warn('Error playing audio:', e));
+      }, 50);
     }
 
     startTransition(async () => {
@@ -83,7 +91,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
   return (
     <Form {...form}>
-       <audio id="confirmSound" preload="auto" src="https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1" style={{ display: 'none' }}></audio>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
