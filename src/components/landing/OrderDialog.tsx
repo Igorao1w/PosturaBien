@@ -78,7 +78,7 @@ export default function OrderDialog({ open, onOpenChange }: OrderDialogProps) {
                     </p>
                     </div>
                     <div>
-                    <h3 className="text-xl font-bold text-center mb-4">🛒 Completa tu pedido</h3>
+                    <h3 className="text-2xl font-bold text-center mb-4 text-primary">🚀 Último paso para recibir tu corrector</h3>
                     <OrderForm onSuccess={handleSuccess} />
                     </div>
                 </>
