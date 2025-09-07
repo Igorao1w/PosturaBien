@@ -41,6 +41,8 @@ const InputField = ({ field, placeholder, icon }: { field: any, placeholder: str
 export default function OrderForm({ onSuccess }: OrderFormProps) {
   const [isPending, startTransition] = React.useTransition();
   const { toast } = useToast();
+  const audioRef = React.useRef<HTMLAudioElement>(null);
+
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(formSchema),
@@ -54,6 +56,16 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
   });
 
   const onSubmit = (values: OrderFormValues) => {
+    
+    const audio = document.getElementById("confirmSound") as HTMLAudioElement;
+    if (audio) {
+      audio.volume = 0.6;
+      audio.currentTime = 0;
+      audio.play().catch(error => {
+        console.error("Audio playback failed:", error);
+      });
+    }
+
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
@@ -71,6 +83,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
   return (
     <Form {...form}>
+       <audio id="confirmSound" preload="auto" src="https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1" style={{ display: 'none' }}></audio>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
