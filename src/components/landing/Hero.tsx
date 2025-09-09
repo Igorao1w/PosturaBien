@@ -54,6 +54,7 @@ export default function Hero({ onOrderNow }: HeroProps) {
                 <span className="text-red-500 line-through mr-2 decoration-2">$124.000 COP</span>
                 <span className="text-green-600 font-bold">$79.000 COP</span>
             </div>
+             <p className="mt-2 text-sm text-foreground/70">📏 Escolha seu tamaño: disponible en S, M, L, XL, XXL</p>
           </div>
         </div>
         <div className="flex justify-center">

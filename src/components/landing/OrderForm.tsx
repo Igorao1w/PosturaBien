@@ -14,6 +14,7 @@ import { submitOrder } from '@/app/actions';
 import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const formSchema = z.object({
   fullName: z.string().min(1, 'El nombre completo es obligatorio.').refine(value => value.trim().split(/\s+/).length >= 2, {
@@ -21,6 +22,7 @@ const formSchema = z.object({
   }),
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
+  size: z.string({ required_error: "Por favor, selecciona una talla." }),
   additionalInfo: z.string().optional(),
   orderBump: z.boolean().default(false),
 });
@@ -44,7 +46,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   React.useEffect(() => {
-    // Create audio element on the client side
+    // This is safe to run on the client, and will not cause hydration errors.
     const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
     audio.preload = "auto";
     audio.volume = 0.6;
@@ -58,25 +60,19 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
       fullName: '',
       whatsapp: '',
       address: '',
+      size: undefined,
       additionalInfo: '',
       orderBump: false,
     },
   });
 
   const onSubmit = (values: OrderFormValues) => {
-    
-    if (audioRef.current) {
-      const audio = audioRef.current;
-      audio.pause();
-      audio.currentTime = 0;
-      setTimeout(() => {
-        audio.play().catch(e => console.warn('Error playing audio:', e));
-      }, 50);
-    }
-
     startTransition(async () => {
       const result = await submitOrder(values);
       if (result.success) {
+        if (audioRef.current) {
+            audioRef.current.play().catch(e => console.warn('Error playing audio:', e));
+        }
         onSuccess();
         form.reset();
       } else {
@@ -124,6 +120,32 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
               <FormControl>
                 <InputField field={field} placeholder="📍 Dirección completa" icon="📍" />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="size"
+          render={({ field }) => (
+            <FormItem>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                    <div className="relative flex items-center">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
+                        <SelectTrigger className="pl-10">
+                            <SelectValue placeholder="Selecciona tu talla" />
+                        </SelectTrigger>
+                    </div>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="S">S (Altura 130-160cm, Cintura 62-74cm, Peso 27-47kg)</SelectItem>
+                  <SelectItem value="M">M (Altura 150-170cm, Cintura 72-84cm, Peso 45-55kg)</SelectItem>
+                  <SelectItem value="L">L (Altura 165-175cm, Cintura 82-94cm, Peso 52-65kg)</SelectItem>
+                  <SelectItem value="XL">XL (Altura 170-185cm, Cintura 90-105cm, Peso 62-87kg)</SelectItem>
+                  <SelectItem value="XXL">XXL (Altura 180-195cm, Cintura 95-118cm, Peso 87-97kg)</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
