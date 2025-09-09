@@ -46,7 +46,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   React.useEffect(() => {
-    // This is safe to run on the client, and will not cause hydration errors.
     const audio = new Audio("https://www.dropbox.com/scl/fi/9nfxjuon0dfl9llq4a1qn/VID_20250905_210318.mp3?rlkey=ux95q7ahq1q4k46trudr3fsjy&st=gvurusmf&raw=1");
     audio.preload = "auto";
     audio.volume = 0.6;
@@ -102,7 +101,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                            <SelectTrigger className="pl-10 text-base md:text-sm">
+                            <SelectTrigger className="pl-10 text-base md:text-sm h-10">
                                 <SelectValue placeholder="Selecciona tu talla" />
                             </SelectTrigger>
                         </FormControl>
