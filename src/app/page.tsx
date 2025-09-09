@@ -9,6 +9,7 @@ import Usage from '@/components/landing/Usage';
 import Testimonials from '@/components/landing/Testimonials';
 import PersonalizedTestimonial from '@/components/landing/PersonalizedTestimonial';
 import CTA from '@/components/landing/CTA';
+import FAQ from '@/components/landing/FAQ';
 import Footer from '@/components/landing/Footer';
 import OrderDialog from '@/components/landing/OrderDialog';
 
@@ -45,6 +46,7 @@ export default function Home() {
         <Testimonials />
         <PersonalizedTestimonial />
         <CTA onOrderNow={handleOpenOrderSheet} />
+        <FAQ />
       </main>
       <Footer />
       <OrderDialog open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen} />
