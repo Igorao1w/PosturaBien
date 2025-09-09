@@ -22,7 +22,7 @@ const formSchema = z.object({
   }),
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
-  size: z.string({ required_error: "Por favor, selecciona una talla." }),
+  size: z.string({ required_error: "👉 ⚠️ Por favor, selecciona tu talla antes de continuar." }),
   additionalInfo: z.string().optional(),
   orderBump: z.boolean().default(false),
 });
@@ -68,11 +68,15 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
 
   const onSubmit = (values: OrderFormValues) => {
     startTransition(async () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setTimeout(() => {
+            audioRef.current?.play().catch(e => console.warn('Error playing audio:', e));
+        }, 50);
+      }
       const result = await submitOrder(values);
       if (result.success) {
-        if (audioRef.current) {
-            audioRef.current.play().catch(e => console.warn('Error playing audio:', e));
-        }
         onSuccess();
         form.reset();
       } else {
@@ -88,6 +92,33 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="size"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="sr-only">Selecciona tu talla</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                    <div className="relative flex items-center">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
+                        <SelectTrigger className="pl-10 text-base">
+                            <SelectValue placeholder="Selecciona tu talla" />
+                        </SelectTrigger>
+                    </div>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="S">S – Altura 130–160cm, Cintura 62–74cm, Peso 27–47kg</SelectItem>
+                  <SelectItem value="M">M – Altura 150–170cm, Cintura 72–84cm, Peso 45–67kg</SelectItem>
+                  <SelectItem value="L">L – Altura 165–175cm, Cintura 82–94cm, Peso 52–77kg</SelectItem>
+                  <SelectItem value="XL">XL – Altura 170–185cm, Cintura 90–105cm, Peso 67–87kg</SelectItem>
+                  <SelectItem value="XXL">XXL – Altura 180–195cm, Cintura 95–118cm, Peso 87–97kg</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="fullName"
@@ -120,32 +151,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
               <FormControl>
                 <InputField field={field} placeholder="📍 Dirección completa" icon="📍" />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="size"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                    <div className="relative flex items-center">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
-                        <SelectTrigger className="pl-10">
-                            <SelectValue placeholder="Selecciona tu talla" />
-                        </SelectTrigger>
-                    </div>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="S">S (Altura 130-160cm, Cintura 62-74cm, Peso 27-47kg)</SelectItem>
-                  <SelectItem value="M">M (Altura 150-170cm, Cintura 72-84cm, Peso 45-55kg)</SelectItem>
-                  <SelectItem value="L">L (Altura 165-175cm, Cintura 82-94cm, Peso 52-65kg)</SelectItem>
-                  <SelectItem value="XL">XL (Altura 170-185cm, Cintura 90-105cm, Peso 62-87kg)</SelectItem>
-                  <SelectItem value="XXL">XXL (Altura 180-195cm, Cintura 95-118cm, Peso 87-97kg)</SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -257,3 +262,5 @@ export function OrderConfirmation() {
         </div>
     )
 }
+
+    
