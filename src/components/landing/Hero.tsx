@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +14,7 @@ import Autoplay from "embla-carousel-autoplay"
 
 const carouselImages = [
     { src: "https://i.postimg.cc/VNNcFhj6/corretor-11.jpg", alt: "Woman wearing posture corrector" },
-    { src: "https://i.postimg.cc/MZBJtVjy/corretor-03.gif", alt: "Animation showing posture correction", isGif: true },
+    { src: "https://i.postimg.cc/MZBJtVjy/corretor-03.gif", alt: "Animation showing posture correction" },
     { src: "https://i.postimg.cc/9XZsy2vb/imagen-2025-07-22-194214896-1.jpg", alt: "Man wearing posture corrector at desk" },
     { src: "https://i.postimg.cc/ZR3sPPDn/imagen-2025-07-21-232048329.jpg", alt: "Close up of posture corrector" },
 ];
@@ -25,29 +25,8 @@ interface HeroProps {
 
 export default function Hero({ onOrderNow }: HeroProps) {
   const plugin = useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true, playOnInit: true, stopOnLastSnap: false })
-  )
-  const [api, setApi] = useState<any>(null);
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    if (!api) {
-      return
-    }
-
-    setCurrent(api.selectedScrollSnap())
-
-    const onSelect = () => {
-      setCurrent(api.selectedScrollSnap())
-    }
-
-    api.on("select", onSelect)
-
-    return () => {
-      api.off("select", onSelect)
-    }
-  }, [api])
-
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  );
 
   return (
     <section id="hero" className="container mx-auto px-4 pt-4 pb-12 sm:pt-6 sm:pb-16">
@@ -79,7 +58,6 @@ export default function Hero({ onOrderNow }: HeroProps) {
         </div>
         <div className="flex justify-center">
           <Carousel
-            setApi={setApi}
             plugins={[plugin.current]}
             className="w-full max-w-md"
             onMouseEnter={plugin.current.stop}
@@ -90,7 +68,7 @@ export default function Hero({ onOrderNow }: HeroProps) {
                 <CarouselItem key={index}>
                   <div className="p-1">
                     <Image
-                      src={image.isGif && current !== index ? image.src.replace('.gif', '.jpg') : image.src}
+                      src={image.src}
                       alt={image.alt}
                       width={500}
                       height={500}
