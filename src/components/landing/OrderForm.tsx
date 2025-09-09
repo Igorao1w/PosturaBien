@@ -15,6 +15,7 @@ import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck } from 'lucid
 import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   fullName: z.string().min(1, 'El nombre completo es obligatorio.').refine(value => value.trim().split(/\s+/).length >= 2, {
@@ -34,11 +35,11 @@ interface OrderFormProps {
 }
 
 const sizeOptions = [
-  { value: 'S', label: 'S — 130–160 cm' },
-  { value: 'M', label: 'M — 150–170 cm' },
-  { value: 'L', label: 'L — 165–175 cm' },
-  { value: 'XL', label: 'XL — 170–185 cm' },
-  { value: 'XXL', label: 'XXL — 180–195 cm' },
+  { value: 'S', label: 'S – Altura 130–160cm | Cintura 62–74cm | Peso 27–47kg' },
+  { value: 'M', label: 'M – Altura 150–170cm | Cintura 72–84cm | Peso 45–67kg' },
+  { value: 'L', label: 'L – Altura 165–175cm | Cintura 82–94cm | Peso 52–77kg' },
+  { value: 'XL', label: 'XL – Altura 170–185cm | Cintura 90–105cm | Peso 67–87kg' },
+  { value: 'XXL', label: 'XXL – Altura 180–195cm | Cintura 95–118cm | Peso 87–97kg' },
 ];
 
 const InputField = ({ field, placeholder, icon }: { field: any, placeholder: string, icon: string }) => (
@@ -104,29 +105,33 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           name="size"
           render={({ field }) => (
             <FormItem>
-               <FormControl>
+              <FormControl>
                 <div className="relative flex items-center">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger className="pl-10">
-                            <SelectValue placeholder="Selecciona tu talla" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {sizeOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                            </SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className={cn(
+                        "pl-10 text-base md:text-sm",
+                        !field.value && "text-muted-foreground"
+                      )}>
+                        <SelectValue placeholder="Selecciona tu talla" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {sizeOptions.map((option) => (
+                        <SelectItem 
+                          key={option.value} 
+                          value={option.value}
+                          className="whitespace-normal text-xs sm:text-sm p-2"
+                        >
+                          <div className="w-full break-words">{option.label}</div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </FormControl>
               <FormMessage />
-              <p className="text-center text-xs text-muted-foreground pt-1">
-                <a href="#size-guide" className="underline hover:text-primary">Ver guía completa de tallas</a>.
-              </p>
             </FormItem>
           )}
         />
@@ -273,5 +278,3 @@ export function OrderConfirmation() {
         </div>
     )
 }
-
-    
