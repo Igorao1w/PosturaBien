@@ -98,23 +98,23 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="sr-only">Selecciona tu talla</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                    <div className="relative flex items-center">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
-                        <SelectTrigger className="pl-10 text-base">
-                            <SelectValue placeholder="Selecciona tu talla" />
-                        </SelectTrigger>
-                    </div>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="S">S – Altura 130–160cm, Cintura 62–74cm, Peso 27–47kg</SelectItem>
-                  <SelectItem value="M">M – Altura 150–170cm, Cintura 72–84cm, Peso 45–67kg</SelectItem>
-                  <SelectItem value="L">L – Altura 165–175cm, Cintura 82–94cm, Peso 52–77kg</SelectItem>
-                  <SelectItem value="XL">XL – Altura 170–185cm, Cintura 90–105cm, Peso 67–87kg</SelectItem>
-                  <SelectItem value="XXL">XXL – Altura 180–195cm, Cintura 95–118cm, Peso 87–97kg</SelectItem>
-                </SelectContent>
-              </Select>
+                <div className="relative flex items-center">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                            <SelectTrigger className="pl-10 text-base md:text-sm">
+                                <SelectValue placeholder="Selecciona tu talla" />
+                            </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="S" className="whitespace-normal">S – Altura 130–160cm | Cintura 62–74cm | Peso 27–47kg</SelectItem>
+                            <SelectItem value="M" className="whitespace-normal">M – Altura 150–170cm | Cintura 72–84cm | Peso 45–67kg</SelectItem>
+                            <SelectItem value="L" className="whitespace-normal">L – Altura 165–175cm | Cintura 82–94cm | Peso 52–77kg</SelectItem>
+                            <SelectItem value="XL" className="whitespace-normal">XL – Altura 170–185cm | Cintura 90–105cm | Peso 67–87kg</SelectItem>
+                            <SelectItem value="XXL" className="whitespace-normal">XXL – Altura 180–195cm | Cintura 95–118cm | Peso 87–97kg</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
               <FormMessage />
             </FormItem>
           )}
@@ -262,5 +262,3 @@ export function OrderConfirmation() {
         </div>
     )
 }
-
-    
