@@ -14,8 +14,7 @@ import { submitOrder } from '@/app/actions';
 import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const formSchema = z.object({
   fullName: z.string().min(1, 'El nombre completo es obligatorio.').refine(value => value.trim().split(/\s+/).length >= 2, {
@@ -35,11 +34,11 @@ interface OrderFormProps {
 }
 
 const sizeOptions = [
-  { value: 'S', label: 'S — Altura 130–160cm | Cintura 62–74cm | Peso 27–47kg' },
-  { value: 'M', label: 'M — Altura 150–170cm | Cintura 72–84cm | Peso 45–67kg' },
-  { value: 'L', label: 'L — Altura 165–175cm | Cintura 82–94cm | Peso 52–77kg' },
-  { value: 'XL', label: 'XL — Altura 170–185cm | Cintura 90–105cm | Peso 67–87kg' },
-  { value: 'XXL', label: 'XXL — Altura 180–195cm | Cintura 95–118cm | Peso 87–97kg' },
+  { value: 'S', label: 'S — 130–160 cm' },
+  { value: 'M', label: 'M — 150–170 cm' },
+  { value: 'L', label: 'L — 165–175 cm' },
+  { value: 'XL', label: 'XL — 170–185 cm' },
+  { value: 'XXL', label: 'XXL — 180–195 cm' },
 ];
 
 const InputField = ({ field, placeholder, icon }: { field: any, placeholder: string, icon: string }) => (
@@ -104,35 +103,30 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           control={form.control}
           name="size"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel className="font-semibold text-primary">📏 Selecciona tu talla:</FormLabel>
-              <FormMessage className="text-center" />
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col gap-2"
-                >
-                  {sizeOptions.map((option) => (
-                    <FormItem key={option.value}>
-                      <FormControl>
-                        <RadioGroupItem value={option.value} className="sr-only" />
-                      </FormControl>
-                      <FormLabel 
-                        className={cn(
-                          "flex cursor-pointer items-center justify-start rounded-md border-2 border-muted bg-card p-3 font-normal transition-all hover:border-primary/50",
-                          field.value === option.value && "border-yellow-400 bg-yellow-50 ring-2 ring-yellow-400"
-                        )}
-                      >
-                         <span className="w-full text-sm text-foreground">{option.label}</span>
-                      </FormLabel>
-                    </FormItem>
-                  ))}
-                </RadioGroup>
+            <FormItem>
+               <FormControl>
+                <div className="relative flex items-center">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger className="pl-10">
+                            <SelectValue placeholder="Selecciona tu talla" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                        {sizeOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                            </SelectItem>
+                        ))}
+                        </SelectContent>
+                    </Select>
+                </div>
               </FormControl>
-               <p className="text-center text-xs text-muted-foreground pt-1">
-                 Si dudas, <a href="#size-guide" className="underline hover:text-primary">consulta la Guía rápida de tallas</a>.
-               </p>
+              <FormMessage />
+              <p className="text-center text-xs text-muted-foreground pt-1">
+                <a href="#size-guide" className="underline hover:text-primary">Ver guía completa de tallas</a>.
+              </p>
             </FormItem>
           )}
         />
@@ -279,3 +273,5 @@ export function OrderConfirmation() {
         </div>
     )
 }
+
+    
