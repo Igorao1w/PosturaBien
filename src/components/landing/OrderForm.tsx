@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -107,27 +108,27 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
             <FormItem>
               <div className="relative flex items-center">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg z-10">📏</span>
-                <FormControl>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
                     <SelectTrigger className={cn(
                       "pl-10 text-base md:text-sm",
                       !field.value && "text-muted-foreground"
                     )}>
                       <SelectValue placeholder="Selecciona tu talla" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {sizeOptions.map((option) => (
-                        <SelectItem 
-                          key={option.value} 
-                          value={option.value}
-                          className="whitespace-normal text-xs sm:text-sm p-2"
-                        >
-                          <div className="w-full break-words">{option.label}</div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+                  </FormControl>
+                  <SelectContent>
+                    {sizeOptions.map((option) => (
+                      <SelectItem 
+                        key={option.value} 
+                        value={option.value}
+                        className="whitespace-normal text-xs sm:text-sm p-2"
+                      >
+                        <div className="w-full break-words">{option.label}</div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <FormMessage />
             </FormItem>
@@ -291,3 +292,5 @@ export function OrderConfirmation() {
         </div>
     )
 }
+
+    
