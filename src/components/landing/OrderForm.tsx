@@ -105,18 +105,16 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           name="size"
           render={({ field }) => (
             <FormItem>
-              <FormControl>
-                <div className="relative flex items-center">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">📏</span>
+              <div className="relative flex items-center">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg z-10">📏</span>
+                <FormControl>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={cn(
-                        "pl-10 text-base md:text-sm",
-                        !field.value && "text-muted-foreground"
-                      )}>
-                        <SelectValue placeholder="Selecciona tu talla" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger className={cn(
+                      "pl-10 text-base md:text-sm",
+                      !field.value && "text-muted-foreground"
+                    )}>
+                      <SelectValue placeholder="Selecciona tu talla" />
+                    </SelectTrigger>
                     <SelectContent>
                       {sizeOptions.map((option) => (
                         <SelectItem 
@@ -129,8 +127,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-              </FormControl>
+                </FormControl>
+              </div>
               <FormMessage />
             </FormItem>
           )}
