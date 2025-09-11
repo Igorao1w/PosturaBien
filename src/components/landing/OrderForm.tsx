@@ -186,10 +186,61 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
             </FormItem>
           )}
         />
+
+        <div className="mt-6 space-y-6">
+          <FormField
+            control={form.control}
+            name="orderBump"
+            render={({ field }) => (
+              <FormItem 
+                className={cn(
+                  "rounded-lg border-2 p-4 shadow-sm transition-all duration-300 cursor-pointer",
+                  field.value ? "border-yellow-500 bg-yellow-500/10" : "border-dashed border-gray-400 bg-secondary hover:border-yellow-500"
+                )}
+                onClick={() => field.onChange(!field.value)}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="relative w-24 h-24 flex-shrink-0">
+                    <Image
+                      src="https://i.postimg.cc/k47jC2S2/2-unidades.png"
+                      alt="Oferta especial: 2 correctores de postura"
+                      width={96}
+                      height={96}
+                      className="rounded-md object-contain"
+                    />
+                     <div className="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full transform rotate-12 shadow-lg">
+                      OFERTA
+                    </div>
+                  </div>
+                  <div className="space-y-1 leading-none flex-grow">
+                    <div className="flex items-start space-x-3">
+                      <FormControl className="mt-1">
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="h-5 w-5 border-2"
+                        />
+                      </FormControl>
+                      <div>
+                        <FormLabel className="font-bold text-base cursor-pointer">
+                          ¡OFERTA ESPECIAL! Quiero agregar un corrector adicional por solo $59.000 COP
+                        </FormLabel>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          ¡Aprovecha y llévate el segundo con un gran descuento! Perfecto para regalar o tener un repuesto siempre listo.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
+
         <Button 
           type="submit" 
           disabled={isPending} 
-          className="w-full font-bold text-lg h-12 bg-[#FFD447] text-black hover:bg-[#E6B800]"
+          className="w-full font-bold text-lg h-12 bg-[#FFD447] text-black hover:bg-[#E6B800] mt-6"
         >
           {isPending ? (
             <>
@@ -201,7 +252,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           )}
         </Button>
       </form>
-      <div className="mt-6 space-y-6">
+      <div className="mt-6 space-y-4">
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
           <ShieldCheck className="w-5 h-5 text-green-600" />
           <p>
@@ -209,42 +260,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
           </p>
         </div>
         
-        <div className="relative mx-auto w-32 h-32">
-          <Image
-            src="https://i.postimg.cc/zfTmkRBd/Design-sem-nome-20250806-204948-0000.png"
-            alt="Producto PosturaBien"
-            width={128}
-            height={128}
-            className="rounded-md"
-          />
-          <div className="absolute -bottom-2 -right-8 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-md transform -rotate-12">
-            Más vendido en Colombia
-          </div>
-        </div>
-
-        <FormField
-          control={form.control}
-          name="orderBump"
-          render={({ field }) => (
-            <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-secondary">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel className="font-bold text-base cursor-pointer">
-                  ¡Sí! Quiero agregar un corrector adicional por solo $59.000 COP
-                </FormLabel>
-                <p className="text-sm text-muted-foreground">
-                    Aprovecha esta oferta exclusiva y llévate el segundo con un gran descuento. ¡Ideal para regalar o tener uno de repuesto!
-                </p>
-              </div>
-            </FormItem>
-          )}
-        />
-
         <div className="mt-4 text-center text-xs text-muted-foreground">
             <p className="flex items-center justify-center gap-1.5"><MessageSquare className="w-3 h-3"/> Nuestro equipo se pondrá en contacto por WhatsApp para confirmar tu pedido.</p>
         </div>
