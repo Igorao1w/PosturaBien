@@ -292,5 +292,3 @@ export function OrderConfirmation() {
         </div>
     )
 }
-
-    
