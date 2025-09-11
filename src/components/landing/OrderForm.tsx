@@ -1,20 +1,22 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitOrder } from '@/app/actions';
-import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '../ui/checkbox';
+import Image from 'next/image';
 
 const formSchema = z.object({
   fullName: z.string().min(1, 'El nombre completo es obligatorio.').refine(value => value.trim().split(/\s+/).length >= 2, {
@@ -24,7 +26,18 @@ const formSchema = z.object({
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   size: z.string({ required_error: "⚠️ Por favor, selecciona tu talla antes de continuar." }),
   additionalInfo: z.string().optional(),
+  addBump: z.boolean().default(false).optional(),
+  bumpSize: z.string().optional(),
+}).refine(data => {
+    if (data.addBump && !data.bumpSize) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Por favor, selecciona una talla para el segundo corrector.",
+    path: ["bumpSize"],
 });
+
 
 type OrderFormValues = z.infer<typeof formSchema>;
 
@@ -47,6 +60,9 @@ const InputField = ({ field, placeholder, icon }: { field: any, placeholder: str
     </div>
 );
 
+const MAIN_PRODUCT_PRICE = 79000;
+const BUMP_PRICE = 49900;
+
 export default function OrderForm({ onSuccess }: OrderFormProps) {
   const [isPending, startTransition] = React.useTransition();
   const { toast } = useToast();
@@ -59,7 +75,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
     audioRef.current = audio;
   }, []);
 
-
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,8 +83,17 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
       address: '',
       size: undefined,
       additionalInfo: '',
+      addBump: false,
+      bumpSize: undefined,
     },
   });
+
+  const isBumpChecked = form.watch('addBump');
+
+  const totalPrice = isBumpChecked
+    ? MAIN_PRODUCT_PRICE + BUMP_PRICE
+    : MAIN_PRODUCT_PRICE;
+
 
   const onSubmit = (values: OrderFormValues) => {
     startTransition(async () => {
@@ -181,6 +205,79 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
             </FormItem>
           )}
         />
+        
+        {/* Order Bump Section */}
+        <div className="mt-6 p-4 border-2 border-dashed border-yellow-500 bg-yellow-50 rounded-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+                <Image 
+                    src="https://i.postimg.cc/Vk8RKmDV/foto.jpg"
+                    alt="Oferta especial de 2 correctores posturales"
+                    width={100}
+                    height={100}
+                    className="rounded-md object-cover w-24 h-24 sm:w-28 sm:h-28"
+                />
+                <div className="flex-1 text-center sm:text-left">
+                    <h4 className="text-lg font-bold text-gray-800">🔥 ¡Lleva más 1 Corretor Postural con DESCUENTO exclusivo!</h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                        Garanta um segundo corretor por apenas <strong>${new Intl.NumberFormat('es-CO').format(BUMP_PRICE)} COP</strong> e economize ainda mais.
+                    </p>
+                </div>
+            </div>
+            
+            <FormField
+                control={form.control}
+                name="addBump"
+                render={({ field }) => (
+                    <FormItem className="flex items-center space-x-3 mt-4 bg-white p-3 rounded-md border">
+                        <FormControl>
+                            <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                id="addBump"
+                                className="h-5 w-5"
+                            />
+                        </FormControl>
+                        <FormLabel htmlFor="addBump" className="font-bold text-base text-gray-700 cursor-pointer">
+                            ¡SÍ! Quiero adicionar más 1 Corretor Postural.
+                        </FormLabel>
+                    </FormItem>
+                )}
+            />
+
+            {isBumpChecked && (
+                <div className="mt-4 animate-in fade-in-50 duration-500">
+                    <FormField
+                        control={form.control}
+                        name="bumpSize"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="font-semibold">Talla para el segundo corrector:</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona la talla" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {sizeOptions.map((option) => (
+                                        <SelectItem 
+                                            key={option.value} 
+                                            value={option.value}
+                                            className="whitespace-normal text-xs sm:text-sm p-2"
+                                        >
+                                            {option.label}
+                                        </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+            )}
+        </div>
+
         <Button 
           type="submit" 
           disabled={isPending} 
@@ -197,6 +294,17 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
         </Button>
       </form>
       <div className="mt-6 space-y-4">
+        
+        <div className="text-center font-bold text-xl text-green-600 bg-green-50 p-3 rounded-md">
+            Total Actualizado: ${new Intl.NumberFormat('es-CO').format(totalPrice)} COP
+        </div>
+
+        {isBumpChecked && (
+             <p className="text-center text-sm text-gray-600 italic mt-2">
+                ✅ ¡Oferta exclusiva válida solamente ahora. Aproveite e tenha um corretor extra para você ou para presentear!
+            </p>
+        )}
+
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
           <ShieldCheck className="w-5 h-5 text-green-600" />
           <p>
@@ -237,5 +345,3 @@ export function OrderConfirmation() {
         </div>
     )
 }
-
-    
