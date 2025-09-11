@@ -5,16 +5,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import Image from 'next/image';
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitOrder } from '@/app/actions';
 import { Loader2, CheckCircle, Package, MessageSquare, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
-import { Checkbox } from '../ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { cn } from '@/lib/utils';
 
@@ -26,7 +24,6 @@ const formSchema = z.object({
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   size: z.string({ required_error: "⚠️ Por favor, selecciona tu talla antes de continuar." }),
   additionalInfo: z.string().optional(),
-  orderBump: z.boolean().default(false),
 });
 
 type OrderFormValues = z.infer<typeof formSchema>;
@@ -71,7 +68,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
       address: '',
       size: undefined,
       additionalInfo: '',
-      orderBump: false,
     },
   });
 
@@ -185,57 +181,6 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
             </FormItem>
           )}
         />
-
-        <div className="mt-6 space-y-6">
-          <FormField
-            control={form.control}
-            name="orderBump"
-            render={({ field }) => (
-              <FormItem 
-                className={cn(
-                  "rounded-lg border-2 p-4 shadow-sm transition-all duration-300 cursor-pointer",
-                  field.value ? "border-yellow-500 bg-yellow-500/10" : "border-dashed border-gray-400 bg-secondary hover:border-yellow-500"
-                )}
-                onClick={() => field.onChange(!field.value)}
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="relative w-24 h-24 flex-shrink-0">
-                    <Image
-                      src="https://i.postimg.cc/k47jC2S2/2-unidades.png"
-                      alt="Oferta especial: 2 correctores de postura"
-                      width={96}
-                      height={96}
-                      className="rounded-md object-contain"
-                    />
-                     <div className="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full transform rotate-12 shadow-lg">
-                      OFERTA
-                    </div>
-                  </div>
-                  <div className="space-y-1 leading-none flex-grow">
-                    <div className="flex items-start space-x-3">
-                      <FormControl className="mt-1">
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="h-5 w-5 border-2"
-                        />
-                      </FormControl>
-                      <div>
-                        <FormLabel className="font-bold text-base cursor-pointer">
-                          ¡OFERTA ESPECIAL! Quiero agregar un corrector adicional por solo $59.000 COP
-                        </FormLabel>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          ¡Aprovecha y llévate el segundo con un gran descuento! Perfecto para regalar o tener un repuesto siempre listo.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </FormItem>
-            )}
-          />
-        </div>
-
         <Button 
           type="submit" 
           disabled={isPending} 
@@ -292,3 +237,5 @@ export function OrderConfirmation() {
         </div>
     )
 }
+
+    

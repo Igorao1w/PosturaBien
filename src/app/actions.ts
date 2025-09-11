@@ -42,7 +42,6 @@ const OrderFormSchema = z.object({
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   size: z.string({ required_error: "Por favor, selecciona una talla." }),
   additionalInfo: z.string().optional(),
-  orderBump: z.boolean().default(false),
 });
 
 export async function submitOrder(
@@ -84,3 +83,5 @@ export async function submitOrder(
   
   return { success: true };
 }
+
+    
