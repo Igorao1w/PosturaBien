@@ -68,8 +68,8 @@ export default function OrderDialog({ open, onOpenChange }: OrderDialogProps) {
                         <div>
                         <h2 className="text-lg font-bold text-primary">Corrector de Postura PosturaBien</h2>
                         <div className="text-lg">
-                            <span className="text-red-500 line-through mr-2 decoration-2 text-base">$124.000 COP</span>
-                            <span className="text-green-600 font-bold">$79.000 COP</span>
+                            <span className="text-red-500 line-through mr-2 decoration-2 text-base">$189.900 COP</span>
+                            <span className="text-green-600 font-bold">$119.900 COP</span>
                         </div>
                         </div>
                     </div>

@@ -25,8 +25,8 @@ export default function CTA({ onOrderNow }: CTAProps) {
             ¡SÍ, LO QUIERO AHORA!
           </Button>
           <div className="mt-4 text-2xl font-bold">
-            <span className="text-red-500 line-through mr-2 decoration-2">$124.000 COP</span>
-            <span className="text-green-400">$79.000 COP</span>
+            <span className="text-red-500 line-through mr-2 decoration-2">$189.900 COP</span>
+            <span className="text-green-400">$119.900 COP</span>
           </div>
           <div className="mt-4 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-primary-foreground/90">
               <div className="flex items-center gap-2">

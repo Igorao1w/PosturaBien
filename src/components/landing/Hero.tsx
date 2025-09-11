@@ -51,8 +51,8 @@ export default function Hero({ onOrderNow }: HeroProps) {
               ¡PÍDELO AHORA Y PAGA EN CASA!
             </Button>
             <div className="mt-2 text-md">
-                <span className="text-red-500 line-through mr-2 decoration-2">$124.000 COP</span>
-                <span className="text-green-600 font-bold">$79.000 COP</span>
+                <span className="text-red-500 line-through mr-2 decoration-2">$189.900 COP</span>
+                <span className="text-green-600 font-bold">$119.900 COP</span>
             </div>
              <p className="mt-2 text-sm text-foreground/70">📏 Escolha seu tamaño: disponible en S, M, L, XL, XXL</p>
           </div>

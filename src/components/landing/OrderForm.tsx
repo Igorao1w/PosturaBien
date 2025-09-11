@@ -60,8 +60,8 @@ const InputField = ({ field, placeholder, icon }: { field: any, placeholder: str
     </div>
 );
 
-const MAIN_PRODUCT_PRICE = 79000;
-const BUMP_PRICE = 49900;
+const MAIN_PRODUCT_PRICE = 119900;
+const BUMP_PRICE = 69900;
 
 export default function OrderForm({ onSuccess }: OrderFormProps) {
   const [isPending, startTransition] = React.useTransition();
