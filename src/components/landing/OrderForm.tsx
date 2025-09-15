@@ -106,6 +106,10 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
       }
       const result = await submitOrder(values);
       if (result.success) {
+        if (typeof window.utmify === 'function') {
+            const purchaseValue = isBumpChecked ? MAIN_PRODUCT_PRICE + BUMP_PRICE : MAIN_PRODUCT_PRICE;
+            window.utmify('track', 'Purchase', { currency: 'COP', value: purchaseValue });
+        }
         onSuccess();
         form.reset();
       } else {
