@@ -59,7 +59,7 @@ const prompt = ai.definePrompt({
   - Pain Level: {{{painLevel}}}
   - Activity Level: {{{activityLevel}}}
 
-  Write a testimonial that addresses their specific situation and highlights the benefits of using the posture corrector to alleviate their back pain. The testimonial should sound authentic and be no more than three sentences.
+  Write a testimonial that addresses their specific situation and highlights the benefits of using the posture corrector to alleviate their back pain. The testimonial should sound authentic and be no more than three sentences. The testimonial must be in Spanish.
 
   Testimonial:`,
 });
