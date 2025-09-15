@@ -1,3 +1,4 @@
+
 'use server';
 
 import { personalizeTestimonial, PersonalizeTestimonialInput, PersonalizeTestimonialOutput } from '@/ai/flows/personalize-testimonial';
@@ -17,6 +18,11 @@ export async function getPersonalizedTestimonial(
   input: PersonalizeTestimonialInput
 ): Promise<{ success: boolean; data: PersonalizeTestimonialOutput | null; error: string | null }> {
   
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('GEMINI_API_KEY is not set in the environment.');
+    return { success: false, data: null, error: 'La configuración del servidor está incompleta. El servicio de IA no está disponible.' };
+  }
+
   const validationResult = ActionInputSchema.safeParse(input);
 
   if (!validationResult.success) {
