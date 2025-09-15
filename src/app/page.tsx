@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -14,11 +15,23 @@ import Footer from '@/components/landing/Footer';
 import OrderDialog from '@/components/landing/OrderDialog';
 import SizeGuide from '@/components/landing/SizeGuide';
 
+declare global {
+  interface Window {
+    fbq: (...args: any[]) => void;
+  }
+}
+
 export default function Home() {
   const [isOrderSheetOpen, setIsOrderSheetOpen] = useState(false);
   const [isHeaderButtonVisible, setIsHeaderButtonVisible] = useState(false);
 
   const handleOpenOrderSheet = () => {
+    if (typeof window.fbq === 'function') {
+      if (!sessionStorage.getItem('fb_initiate_checkout')) {
+        window.fbq('track', 'InitiateCheckout');
+        sessionStorage.setItem('fb_initiate_checkout', 'true');
+      }
+    }
     setIsOrderSheetOpen(true);
   };
 
