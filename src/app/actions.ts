@@ -126,16 +126,13 @@ export async function submitOrder(
 
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/16912301/2y575g4/';
   
-  // Create a clean payload for Zapier, excluding the 'addBump' field.
-  const { addBump, ...zapierPayload } = validationResult.data;
-
   try {
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(zapierPayload),
+      body: JSON.stringify(validationResult.data),
     });
 
     if (!response.ok) {
