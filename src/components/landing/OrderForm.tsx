@@ -24,7 +24,7 @@ const formSchema = z.object({
   }),
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
-  size: z.string({ required_error: "⚠️ Por favor, selecciona tu talla antes de continuar." }),
+  size: z.string({ required_error: "Por favor, selecciona una talla." }).min(1, "Por favor, selecciona una talla."),
   additionalInfo: z.string().optional(),
   addBump: z.boolean().default(false).optional(),
   bumpSize: z.string().optional(),
@@ -62,6 +62,49 @@ const InputField = ({ field, placeholder, icon }: { field: any, placeholder: str
 
 const MAIN_PRODUCT_PRICE = 119900;
 const BUMP_PRICE = 69900;
+
+async function sendUtmifyConversion(values: OrderFormValues) {
+  const payload = {
+    orderId: "FORM-" + Date.now(),
+    platform: "firebase_form",
+    paymentMethod: "cash_on_delivery",
+    status: "paid",
+    createdAt: new Date().toISOString(),
+    approvedDate: new Date().toISOString(),
+    customer: {
+      name: values.fullName,
+      email: `${values.whatsapp}@email.com`, // Using whatsapp as placeholder for email
+    },
+    products: [{
+      id: "P001",
+      name: "Corrector de Postura",
+      quantity: 1,
+      priceInCents: 0
+    }],
+    isTest: false
+  };
+
+  try {
+    const response = await fetch("https://api.utmify.com.br/v1/conversions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-token": "OKO1TOpLyGjmWOScW0M9m8z0mL8xtORqD3ai"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("Venda registrada na UTMfy 🚀");
+    } else {
+      console.error("UTMify API Error:", await response.json());
+      alert("Erro ao enviar venda ❌");
+    }
+  } catch (error) {
+    console.error("Network error sending to UTMify:", error);
+    alert("Erro ao enviar venda ❌");
+  }
+}
 
 export default function OrderForm({ onSuccess }: OrderFormProps) {
   const [isPending, startTransition] = React.useTransition();
@@ -106,6 +149,7 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
       }
       const result = await submitOrder(values);
       if (result.success) {
+        await sendUtmifyConversion(values); // Call UTMify conversion
         if (typeof window.utmify === 'function') {
             const purchaseValue = isBumpChecked ? MAIN_PRODUCT_PRICE + BUMP_PRICE : MAIN_PRODUCT_PRICE;
             window.utmify('track', 'Purchase', { currency: 'COP', value: purchaseValue });
