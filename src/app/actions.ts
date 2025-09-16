@@ -65,7 +65,7 @@ const OrderFormSchema = z.object({
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
 async function sendOrderToUtmify(formData: OrderFormData) {
-  const utmifyApiToken = 'WDCjG35TnYM5tgZISXenpT3revSPrkTeEwtO';
+  const utmifyApiToken = 'foNPekl8GfmVjd3ttVRczxDwPXBV5Thspwh6';
   const utmifyEndpoint = 'https://api.utmify.com.br/api-credentials/orders';
   const headerList = headers();
   const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
@@ -130,7 +130,7 @@ async function sendOrderToUtmify(formData: OrderFormData) {
       userCommissionInCents: totalPriceInCents,
       currency: "COP"
     },
-    isTest: false
+    isTest: true
   };
   
   try {
