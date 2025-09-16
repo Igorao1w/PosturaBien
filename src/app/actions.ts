@@ -94,8 +94,8 @@ async function sendOrderToUTMify(formData: z.infer<typeof OrderFormSchema>) {
   const payload = {
     "orderId": orderId,
     "platform": "PosturaBien",
-    "paymentMethod": "contra_entrega",
-    "status": "pending",
+    "paymentMethod": "unknown", // Changed from "contra_entrega"
+    "status": "paid", // Changed from "pending"
     "createdAt": createdAt,
     "approvedDate": null,
     "refundedAt": null,
@@ -108,7 +108,7 @@ async function sendOrderToUTMify(formData: z.infer<typeof OrderFormSchema>) {
       "ip": ip
     },
     "products": products,
-    "trackingParameters": {}, // UTM parameters are captured client-side by the script
+    "trackingParameters": {}, // UTMify script on client-side handles this
     "commission": {
       "totalPriceInCents": totalPriceInCents,
       "gatewayFeeInCents": 0,
