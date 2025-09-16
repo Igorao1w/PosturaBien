@@ -17,7 +17,7 @@ import SizeGuide from '@/components/landing/SizeGuide';
 
 declare global {
   interface Window {
-    utmify: (...args: any[]) => void;
+    fbq: (...args: any[]) => void;
   }
 }
 
@@ -26,10 +26,10 @@ export default function Home() {
   const [isHeaderButtonVisible, setIsHeaderButtonVisible] = useState(false);
 
   const handleOpenOrderSheet = () => {
-    if (typeof window.utmify === 'function') {
-      if (!sessionStorage.getItem('utm_initiate_checkout')) {
-        window.utmify('track', 'InitiateCheckout');
-        sessionStorage.setItem('utm_initiate_checkout', 'true');
+    if (typeof window.fbq === 'function') {
+      if (!sessionStorage.getItem('fb_initiate_checkout')) {
+        window.fbq('track', 'InitiateCheckout');
+        sessionStorage.setItem('fb_initiate_checkout', 'true');
       }
     }
     setIsOrderSheetOpen(true);

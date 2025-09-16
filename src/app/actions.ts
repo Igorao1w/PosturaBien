@@ -61,56 +61,6 @@ const OrderFormSchema = z.object({
     path: ["bumpSize"],
 });
 
-async function sendOrderToUTMify(formData: z.infer<typeof OrderFormSchema>) {
-  const products = [
-    {
-      name: "Corretor Postural",
-      amount_cents: 119900
-    }
-  ];
-
-  let totalAmountCents = 119900;
-
-  if (formData.addBump) {
-    products.push({
-      name: "Order Bump - Corretor extra",
-      amount_cents: 69900
-    });
-    totalAmountCents += 69900;
-  }
-
-  const payload = {
-    name: formData.fullName,
-    phone: formData.whatsapp,
-    email: `${formData.whatsapp}@posturabien.com`, // Using whatsapp as a placeholder for email
-    products: products,
-    amount_cents: totalAmountCents,
-    isTest: false,
-    utms: {}, // The client-side script populates this. We send an empty object.
-  };
-
-  try {
-    const response = await fetch('https://api.utmify.com.br/v1/conversions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer WDCjG35TnYM5tgZISXenpT3revSPrkTeEwtO'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-        const errorBody = await response.json();
-        console.error('UTMify API Error:', response.status, errorBody);
-    } else {
-        const result = await response.json();
-        console.log('Conversion successfully sent to UTMify API:', result);
-    }
-  } catch (error) {
-    console.error('Failed to send conversion to UTMify API:', error);
-  }
-}
-
 export async function submitOrder(
   formData: z.infer<typeof OrderFormSchema>
 ): Promise<{ success: boolean; error?: string }> {
@@ -120,10 +70,7 @@ export async function submitOrder(
     const errorMessage = validationResult.error.errors.map(e => `-${e.message}`).join('\n');
     return { success: false, error: `⚠️ Por favor revisa tus datos:\n${errorMessage}` };
   }
-
-  // Send to UTMify first
-  await sendOrderToUTMify(validationResult.data);
-
+  
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/16912301/2y575g4/';
   
   try {
