@@ -62,80 +62,52 @@ const OrderFormSchema = z.object({
 });
 
 async function sendOrderToUTMify(formData: z.infer<typeof OrderFormSchema>) {
-  const head = headers();
-  const ip = head.get('x-forwarded-for') ?? '127.0.0.1';
-
-  const orderId = `PB-${Date.now()}`;
-  const createdAt = new Date().toISOString();
-
   const products = [
     {
-      "id": "CORRETOR01",
-      "name": "Corretor de Postura",
-      "quantity": 1,
-      "priceInCents": 11990000,
-      "talla": formData.size
+      name: "Corretor Postural",
+      amount_cents: 119900
     }
   ];
 
-  let totalPriceInCents = 11990000;
+  let totalAmountCents = 119900;
 
-  if (formData.addBump && formData.bumpSize) {
+  if (formData.addBump) {
     products.push({
-      "id": "CORRETOR02",
-      "name": "Corretor de Postura (Order Bump)",
-      "quantity": 1,
-      "priceInCents": 6990000,
-      "talla": formData.bumpSize
+      name: "Order Bump - Corretor extra",
+      amount_cents: 69900
     });
-    totalPriceInCents += 6990000;
+    totalAmountCents += 69900;
   }
 
   const payload = {
-    "orderId": orderId,
-    "platform": "PosturaBien",
-    "paymentMethod": "unknown", // Changed from "contra_entrega"
-    "status": "paid", // Changed from "pending"
-    "createdAt": createdAt,
-    "approvedDate": null,
-    "refundedAt": null,
-    "customer": {
-      "name": formData.fullName,
-      "email": `${formData.whatsapp}@posturabien.com`, // Using whatsapp as a placeholder for email
-      "phone": formData.whatsapp,
-      "document": null,
-      "country": "CO",
-      "ip": ip
-    },
-    "products": products,
-    "trackingParameters": {}, // UTMify script on client-side handles this
-    "commission": {
-      "totalPriceInCents": totalPriceInCents,
-      "gatewayFeeInCents": 0,
-      "userCommissionInCents": totalPriceInCents,
-      "currency": "COP"
-    },
-    "isTest": true
+    name: formData.fullName,
+    phone: formData.whatsapp,
+    email: `${formData.whatsapp}@posturabien.com`, // Using whatsapp as a placeholder for email
+    products: products,
+    amount_cents: totalAmountCents,
+    isTest: false,
+    utms: {}, // The client-side script populates this. We send an empty object.
   };
 
   try {
-    const response = await fetch('https://api.utmify.com.br/api-credentials/orders', {
+    const response = await fetch('https://api.utmify.com.br/v1/conversions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-token': 'WDCjG35TnYM5tgZISXenpT3revSPrkTeEwtO'
+        'Authorization': 'Bearer WDCjG35TnYM5tgZISXenpT3revSPrkTeEwtO'
       },
       body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
-        const errorBody = await response.text();
+        const errorBody = await response.json();
         console.error('UTMify API Error:', response.status, errorBody);
     } else {
-        console.log('Order successfully sent to UTMify API');
+        const result = await response.json();
+        console.log('Conversion successfully sent to UTMify API:', result);
     }
   } catch (error) {
-    console.error('Failed to send order to UTMify API:', error);
+    console.error('Failed to send conversion to UTMify API:', error);
   }
 }
 
