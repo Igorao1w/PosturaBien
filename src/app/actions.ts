@@ -124,7 +124,7 @@ export async function submitOrder(
   // Send to UTMify first
   await sendOrderToUTMify(validationResult.data);
 
-  const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
+  const webhookUrl = 'https://hooks.zapier.com/hooks/catch/16912301/2y575g4/';
   
   try {
     const response = await fetch(webhookUrl, {
