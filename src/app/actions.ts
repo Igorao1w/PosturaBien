@@ -155,6 +155,47 @@ async function sendOrderToUtmify(formData: OrderFormData) {
   }
 }
 
+async function sendUtmifyConversion(values: OrderFormData) {
+  const payload = {
+    orderId: "FORM-" + Date.now(),
+    platform: "firebase_form",
+    paymentMethod: "cash_on_delivery",
+    status: "paid",
+    createdAt: new Date().toISOString(),
+    approvedDate: new Date().toISOString(),
+    customer: {
+      name: values.fullName,
+      email: `${values.whatsapp}@email.com`,
+    },
+    products: [{
+      id: "P001",
+      name: "Corrector de Postura",
+      quantity: 1,
+      priceInCents: 0
+    }],
+    isTest: false
+  };
+
+  try {
+    const response = await fetch("https://api.utmify.com.br/v1/conversions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-token": "OKO1TOpLyGjmWOScW0M9m8z0mL8xtORqD3ai"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      console.log("Venda registrada na UTMfy 🚀");
+    } else {
+      console.error("UTMify API Error:", await response.json());
+    }
+  } catch (error) {
+    console.error("Network error sending to UTMify:", error);
+  }
+}
+
 
 export async function submitOrder(
   formData: OrderFormData
@@ -195,6 +236,9 @@ export async function submitOrder(
   
   // Send data to UTMify API after successful Zapier submission
   await sendOrderToUtmify(validationResult.data);
+  // Send conversion data to UTMify
+  await sendUtmifyConversion(validationResult.data);
+
 
   return { success: true };
 }
