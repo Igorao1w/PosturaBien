@@ -95,14 +95,12 @@ async function sendUtmifyConversion(values: OrderFormValues) {
     });
 
     if (response.ok) {
-      alert("Venda registrada na UTMfy 🚀");
+      console.log("Venda registrada na UTMfy 🚀");
     } else {
       console.error("UTMify API Error:", await response.json());
-      alert("Erro ao enviar venda ❌");
     }
   } catch (error) {
     console.error("Network error sending to UTMify:", error);
-    alert("Erro ao enviar venda ❌");
   }
 }
 
