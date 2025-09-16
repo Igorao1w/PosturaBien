@@ -71,7 +71,7 @@ export async function submitOrder(
     return { success: false, error: `⚠️ Por favor revisa tus datos:\n${errorMessage}` };
   }
   
-  const webhookUrl = 'https://hooks.zapier.com/hooks/catch/16912301/2y575g4/';
+  const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
   
   try {
     const response = await fetch(webhookUrl, {
