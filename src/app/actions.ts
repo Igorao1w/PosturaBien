@@ -65,23 +65,22 @@ const OrderFormSchema = z.object({
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
 async function sendOrderToUtmify(formData: OrderFormData) {
-  const utmifyApiToken = 'foNPekl8GfmVjd3ttVRczxDwPXBV5Thspwh6';
+  const utmifyApiToken = 'WDCjG35TnYM5tgZISXenpT3revSPrkTeEwtO';
   const utmifyEndpoint = 'https://api.utmify.com.br/api-credentials/orders';
   const headerList = headers();
   const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
 
-  const orderId = randomUUID();
-  const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const orderId = "FORM-" + Date.now();
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   const products = [
     {
       id: "CORRECTOR01",
       name: "Corrector de Postura",
-      planId: null,
-      planName: null,
       quantity: 1,
       priceInCents: 11990000,
-      talla: formData.size
+      planId: null,
+      planName: null,
     }
   ];
 
@@ -91,33 +90,32 @@ async function sendOrderToUtmify(formData: OrderFormData) {
     products.push({
       id: "CORRECTOR02_BUMP",
       name: "Corrector de Postura (Order Bump)",
-      planId: null,
-      planName: null,
       quantity: 1,
       priceInCents: 6990000,
-      talla: formData.bumpSize
+      planId: null,
+      planName: null,
     });
     totalPriceInCents += 6990000;
   }
 
   const payload = {
     orderId: orderId,
-    platform: "PosturaBien",
-    paymentMethod: "pix", // "contra_entrega" is not supported, using a valid enum
-    status: "waiting_payment", // Initial status
-    createdAt: createdAt,
-    approvedDate: null,
+    platform: "firebase_form",
+    paymentMethod: "free_price",
+    status: "paid",
+    createdAt: now,
+    approvedDate: now,
     refundedAt: null,
     customer: {
       name: formData.fullName,
-      email: `${formData.whatsapp}@email.com`, // Email is required, creating a placeholder
+      email: `${formData.whatsapp}@email.com`, // Placeholder email
       phone: formData.whatsapp,
       document: null,
       country: "CO",
       ip: userIp
     },
     products: products,
-    trackingParameters: { // Placeholder as these are captured client-side by UTMify's script
+    trackingParameters: { // UTMify script on client-side will capture these. Sending empty is fine.
       src: null,
       sck: null,
       utm_source: null,
@@ -129,10 +127,10 @@ async function sendOrderToUtmify(formData: OrderFormData) {
     commission: {
       totalPriceInCents: totalPriceInCents,
       gatewayFeeInCents: 0,
-      userCommissionInCents: totalPriceInCents, // As per docs, can be same as total
+      userCommissionInCents: totalPriceInCents,
       currency: "COP"
     },
-    isTest: true 
+    isTest: false
   };
   
   try {
@@ -144,12 +142,13 @@ async function sendOrderToUtmify(formData: OrderFormData) {
       },
       body: JSON.stringify(payload),
     });
-
+    
     if (!response.ok) {
       const errorBody = await response.json();
       console.error('UTMify API Error:', response.status, JSON.stringify(errorBody, null, 2));
     } else {
-      console.log('Order successfully sent to UTMify API.');
+        const successBody = await response.json();
+        console.log('Order successfully sent to UTMify API:', JSON.stringify(successBody, null, 2));
     }
   } catch (error) {
     console.error('Error sending data to UTMify API:', error);
@@ -199,5 +198,3 @@ export async function submitOrder(
 
   return { success: true };
 }
-
-    
