@@ -3,6 +3,7 @@
 
 import { personalizeTestimonial, PersonalizeTestimonialInput, PersonalizeTestimonialOutput } from '@/ai/flows/personalize-testimonial';
 import { z } from 'zod';
+import { headers } from 'next/headers';
 
 const ActionInputSchema = z.object({
   age: z.coerce.number()
@@ -60,6 +61,84 @@ const OrderFormSchema = z.object({
     path: ["bumpSize"],
 });
 
+async function sendOrderToUTMify(formData: z.infer<typeof OrderFormSchema>) {
+  const head = headers();
+  const ip = head.get('x-forwarded-for') ?? '127.0.0.1';
+
+  const orderId = `PB-${Date.now()}`;
+  const createdAt = new Date().toISOString();
+
+  const products = [
+    {
+      "id": "CORRETOR01",
+      "name": "Corretor de Postura",
+      "quantity": 1,
+      "priceInCents": 11990000,
+      "talla": formData.size
+    }
+  ];
+
+  let totalPriceInCents = 11990000;
+
+  if (formData.addBump && formData.bumpSize) {
+    products.push({
+      "id": "CORRETOR02",
+      "name": "Corretor de Postura (Order Bump)",
+      "quantity": 1,
+      "priceInCents": 6990000,
+      "talla": formData.bumpSize
+    });
+    totalPriceInCents += 6990000;
+  }
+
+  const payload = {
+    "orderId": orderId,
+    "platform": "PosturaBien",
+    "paymentMethod": "contra_entrega",
+    "status": "pending",
+    "createdAt": createdAt,
+    "approvedDate": null,
+    "refundedAt": null,
+    "customer": {
+      "name": formData.fullName,
+      "email": `${formData.whatsapp}@posturabien.com`, // Using whatsapp as a placeholder for email
+      "phone": formData.whatsapp,
+      "document": null,
+      "country": "CO",
+      "ip": ip
+    },
+    "products": products,
+    "trackingParameters": {}, // UTM parameters are captured client-side by the script
+    "commission": {
+      "totalPriceInCents": totalPriceInCents,
+      "gatewayFeeInCents": 0,
+      "userCommissionInCents": totalPriceInCents,
+      "currency": "COP"
+    },
+    "isTest": true
+  };
+
+  try {
+    const response = await fetch('https://api.utmify.com.br/api-credentials/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-token': 'WDCjG35TnYM5tgZISXenpT3revSPrkTeEwtO'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.text();
+        console.error('UTMify API Error:', response.status, errorBody);
+    } else {
+        console.log('Order successfully sent to UTMify API');
+    }
+  } catch (error) {
+    console.error('Failed to send order to UTMify API:', error);
+  }
+}
+
 export async function submitOrder(
   formData: z.infer<typeof OrderFormSchema>
 ): Promise<{ success: boolean; error?: string }> {
@@ -69,6 +148,9 @@ export async function submitOrder(
     const errorMessage = validationResult.error.errors.map(e => `-${e.message}`).join('\n');
     return { success: false, error: `⚠️ Por favor revisa tus datos:\n${errorMessage}` };
   }
+
+  // Send to UTMify first
+  await sendOrderToUTMify(validationResult.data);
 
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
   
