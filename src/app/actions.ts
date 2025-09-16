@@ -4,6 +4,7 @@
 import { personalizeTestimonial, PersonalizeTestimonialInput, PersonalizeTestimonialOutput } from '@/ai/flows/personalize-testimonial';
 import { z } from 'zod';
 import { headers } from 'next/headers';
+import { randomUUID } from 'crypto';
 
 const ActionInputSchema = z.object({
   age: z.coerce.number()
@@ -61,8 +62,103 @@ const OrderFormSchema = z.object({
     path: ["bumpSize"],
 });
 
+type OrderFormData = z.infer<typeof OrderFormSchema>;
+
+async function sendOrderToUtmify(formData: OrderFormData) {
+  const utmifyApiToken = 'foNPekl8GfmVjd3ttVRczxDwPXBV5Thspwh6';
+  const utmifyEndpoint = 'https://api.utmify.com.br/api-credentials/orders';
+  const headerList = headers();
+  const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
+
+  const orderId = randomUUID();
+  const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+  const products = [
+    {
+      id: "CORRECTOR01",
+      name: "Corrector de Postura",
+      planId: null,
+      planName: null,
+      quantity: 1,
+      priceInCents: 11990000,
+      talla: formData.size
+    }
+  ];
+
+  let totalPriceInCents = 11990000;
+
+  if (formData.addBump && formData.bumpSize) {
+    products.push({
+      id: "CORRECTOR02_BUMP",
+      name: "Corrector de Postura (Order Bump)",
+      planId: null,
+      planName: null,
+      quantity: 1,
+      priceInCents: 6990000,
+      talla: formData.bumpSize
+    });
+    totalPriceInCents += 6990000;
+  }
+
+  const payload = {
+    orderId: orderId,
+    platform: "PosturaBien",
+    paymentMethod: "pix", // "contra_entrega" is not supported, using a valid enum
+    status: "waiting_payment", // Initial status
+    createdAt: createdAt,
+    approvedDate: null,
+    refundedAt: null,
+    customer: {
+      name: formData.fullName,
+      email: `${formData.whatsapp}@email.com`, // Email is required, creating a placeholder
+      phone: formData.whatsapp,
+      document: null,
+      country: "CO",
+      ip: userIp
+    },
+    products: products,
+    trackingParameters: { // Placeholder as these are captured client-side by UTMify's script
+      src: null,
+      sck: null,
+      utm_source: null,
+      utm_campaign: null,
+      utm_medium: null,
+      utm_content: null,
+      utm_term: null
+    },
+    commission: {
+      totalPriceInCents: totalPriceInCents,
+      gatewayFeeInCents: 0,
+      userCommissionInCents: totalPriceInCents, // As per docs, can be same as total
+      currency: "COP"
+    },
+    isTest: true 
+  };
+  
+  try {
+    const response = await fetch(utmifyEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-token': utmifyApiToken,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.json();
+      console.error('UTMify API Error:', response.status, JSON.stringify(errorBody, null, 2));
+    } else {
+      console.log('Order successfully sent to UTMify API.');
+    }
+  } catch (error) {
+    console.error('Error sending data to UTMify API:', error);
+  }
+}
+
+
 export async function submitOrder(
-  formData: z.infer<typeof OrderFormSchema>
+  formData: OrderFormData
 ): Promise<{ success: boolean; error?: string }> {
   const validationResult = OrderFormSchema.safeParse(formData);
 
@@ -96,7 +192,12 @@ export async function submitOrder(
     return { success: false, error: 'Ocurrió un error inesperado al enviar tu pedido. Por favor, inténtelo de nuevo más tarde.' };
   }
   
-  console.log("Order submitted:", validationResult.data);
+  console.log("Order submitted to Zapier:", validationResult.data);
   
+  // Send data to UTMify API after successful Zapier submission
+  await sendOrderToUtmify(validationResult.data);
+
   return { success: true };
 }
+
+    
