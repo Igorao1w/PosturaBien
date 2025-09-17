@@ -64,7 +64,7 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
+async function sendOrderToUtmify(formData: OrderFormData, orderId: string, timestamp: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders?token=${utmifyApiToken}`;
   const headerList = headers();
@@ -94,12 +94,14 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
     });
     totalPriceInCents += 6990000;
   }
-
+  
   const payload = {
     orderId: orderId,
     platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
+    createdAt: timestamp,
+    approvedDate: timestamp,
     refundedAt: null,
     customer: {
       name: formData.fullName,
@@ -110,7 +112,7 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
       ip: userIp
     },
     products: products,
-    trackingParameters: { // UTMify script on client-side will capture these. Sending empty is fine.
+    trackingParameters: { 
       src: null,
       sck: null,
       utm_source: null,
@@ -149,12 +151,14 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData, orderId: string) {
+async function sendUtmifyConversion(values: OrderFormData, orderId: string, timestamp: string) {
   const payload = {
     orderId: orderId,
     platform: "firebase_form",
     paymentMethod: "cash_on_delivery",
     status: "paid",
+    createdAt: timestamp,
+    approvedDate: timestamp,
     customer: {
       name: values.fullName,
       email: `${values.whatsapp}@email.com`,
@@ -203,6 +207,19 @@ export async function submitOrder(
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
   
   const uniqueOrderId = `FORM-${randomUUID()}`;
+  
+  const now = new Date();
+  const timestamp = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Bogota',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+  }).replace(/, /g, ' ').replace(/\//g, '-');
+
 
   try {
     const response = await fetch(webhookUrl, {
@@ -229,8 +246,8 @@ export async function submitOrder(
   
   console.log("Order submitted to Zapier:", validationResult.data);
   
-  await sendOrderToUtmify(validationResult.data, uniqueOrderId);
-  await sendUtmifyConversion(validationResult.data, uniqueOrderId);
+  await sendOrderToUtmify(validationResult.data, uniqueOrderId, timestamp);
+  await sendUtmifyConversion(validationResult.data, uniqueOrderId, timestamp);
 
 
   return { success: true };
