@@ -81,7 +81,7 @@ function getUTCDateTimeStringWithBuffer(): string {
 
 
 async function sendToZapierWebhook(formData: OrderFormData, orderId: string) {
-    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/19515908/2s0wylj/';
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
     const payload = {
         orderId: orderId,
         ...formData
