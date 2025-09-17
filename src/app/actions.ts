@@ -100,7 +100,7 @@ async function sendOrderToUtmify(formData: OrderFormData) {
 
   const payload = {
     orderId: orderId,
-    platform: "firebase_form",
+    platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
     createdAt: now,
@@ -130,7 +130,7 @@ async function sendOrderToUtmify(formData: OrderFormData) {
       userCommissionInCents: totalPriceInCents,
       currency: "COP"
     },
-    isTest: true
+    isTest: false
   };
   
   try {
