@@ -64,9 +64,20 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
+function getUTCDateString() {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = (now.getUTCMonth() + 1).toString().padStart(2, '0');
+  const day = now.getUTCDate().toString().padStart(2, '0');
+  const hours = now.getUTCHours().toString().padStart(2, '0');
+  const minutes = now.getUTCMinutes().toString().padStart(2, '0');
+  const seconds = now.getUTCSeconds().toString().padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+async function sendOrderToUtmify(formData: OrderFormData, orderId: string, utcTimestamp: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
-  const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders?token=${utmifyApiToken}`;
+  const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders`;
   const headerList = headers();
   const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
   
@@ -100,6 +111,8 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
     platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
+    createdAt: utcTimestamp,
+    approvedDate: utcTimestamp,
     refundedAt: null,
     customer: {
       name: formData.fullName,
@@ -133,28 +146,31 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-api-token': utmifyApiToken,
       },
       body: JSON.stringify(payload),
     });
     
     if (!response.ok) {
       const errorBody = await response.json();
-      console.error('UTMify API Error:', response.status, JSON.stringify(errorBody, null, 2));
+      console.error('UTMify API Error (orders):', response.status, JSON.stringify(errorBody, null, 2));
     } else {
         const successBody = await response.json();
-        console.log('Order successfully sent to UTMify API:', JSON.stringify(successBody, null, 2));
+        console.log('Order successfully sent to UTMify API (orders):', JSON.stringify(successBody, null, 2));
     }
   } catch (error) {
-    console.error('Error sending data to UTMify API:', error);
+    console.error('Error sending data to UTMify API (orders):', error);
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData, orderId: string) {
+async function sendUtmifyConversion(values: OrderFormData, orderId: string, utcTimestamp: string) {
   const payload = {
     orderId: orderId,
     platform: "firebase_form",
     paymentMethod: "cash_on_delivery",
     status: "paid",
+    createdAt: utcTimestamp,
+    approvedDate: utcTimestamp,
     customer: {
       name: values.fullName,
       email: `${values.whatsapp}@email.com`,
@@ -182,13 +198,12 @@ async function sendUtmifyConversion(values: OrderFormData, orderId: string) {
       console.log("Venda registrada na UTMfy 🚀");
     } else {
       const errorBody = await response.json();
-      console.error("UTMify API Error:", response.status, JSON.stringify(errorBody, null, 2));
+      console.error("UTMify API Error (conversions):", response.status, JSON.stringify(errorBody, null, 2));
     }
   } catch (error) {
-    console.error("Network error sending to UTMify:", error);
+    console.error("Network error sending to UTMify (conversions):", error);
   }
 }
-
 
 export async function submitOrder(
   formData: OrderFormData
@@ -200,38 +215,22 @@ export async function submitOrder(
     return { success: false, error: `⚠️ Por favor revisa tus datos:\n${errorMessage}` };
   }
   
-  const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
-  
   const uniqueOrderId = `FORM-${randomUUID()}`;
+  const utcTimestamp = getUTCDateString();
 
   try {
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(validationResult.data),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text();
-      console.error('Webhook response not OK:', response.status, errorBody);
-      return { success: false, error: `No se pudo procesar el pedido (Error: ${response.status}). Por favor, verifica tus datos e intenta de nuevo.` };
-    }
-
+    // UTMify calls are now the primary action.
+    await sendOrderToUtmify(validationResult.data, uniqueOrderId, utcTimestamp);
+    await sendUtmifyConversion(validationResult.data, uniqueOrderId, utcTimestamp);
   } catch (error) {
-    console.error('Error sending data to webhook:', error);
-    if (error instanceof Error && 'cause' in error && (error.cause as any)?.code === 'ENOTFOUND') {
-         return { success: false, error: 'Ocurrió un error de red. Por favor, revisa tu conexión a internet e inténtalo de nuevo.' };
-    }
-    return { success: false, error: 'Ocurrió un error inesperado al enviar tu pedido. Por favor, inténtelo de nuevo más tarde.' };
+      console.error('An unexpected error occurred during UTMify submission:', error);
+      if (error instanceof Error && 'cause' in error && (error.cause as any)?.code === 'ENOTFOUND') {
+           return { success: false, error: 'Ocurrió un error de red. Por favor, revisa tu conexión a internet e inténtalo de nuevo.' };
+      }
+      return { success: false, error: 'Ocurrió un error inesperado al enviar tu pedido. Por favor, inténtelo de nuevo más tarde.' };
   }
   
-  console.log("Order submitted to Zapier:", validationResult.data);
-  
-  await sendOrderToUtmify(validationResult.data, uniqueOrderId);
-  await sendUtmifyConversion(validationResult.data, uniqueOrderId);
-
+  console.log("Order submitted to UTMify with ID:", uniqueOrderId);
 
   return { success: true };
 }
