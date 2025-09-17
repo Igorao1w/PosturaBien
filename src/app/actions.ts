@@ -64,7 +64,7 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-async function sendOrderToUtmify(formData: OrderFormData, orderId: string, timestamp: string) {
+async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders?token=${utmifyApiToken}`;
   const headerList = headers();
@@ -100,8 +100,6 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string, times
     platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
-    createdAt: timestamp,
-    approvedDate: timestamp,
     refundedAt: null,
     customer: {
       name: formData.fullName,
@@ -151,14 +149,12 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string, times
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData, orderId: string, timestamp: string) {
+async function sendUtmifyConversion(values: OrderFormData, orderId: string) {
   const payload = {
     orderId: orderId,
     platform: "firebase_form",
     paymentMethod: "cash_on_delivery",
     status: "paid",
-    createdAt: timestamp,
-    approvedDate: timestamp,
     customer: {
       name: values.fullName,
       email: `${values.whatsapp}@email.com`,
@@ -206,22 +202,6 @@ export async function submitOrder(
   
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
   
-  // Generate a single, reliable timestamp in the correct timezone
-  const now = new Date();
-  const formatter = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Bogota',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
-  const parts = formatter.formatToParts(now);
-  const getPart = (type: string) => parts.find(p => p.type === type)?.value || '';
-  const formattedTimestamp = `${getPart('year')}-${getPart('month')}-${getPart('day')} ${getPart('hour')}:${getPart('minute')}:${getPart('second')}`;
-
   const uniqueOrderId = `FORM-${randomUUID()}`;
 
   try {
@@ -249,9 +229,8 @@ export async function submitOrder(
   
   console.log("Order submitted to Zapier:", validationResult.data);
   
-  // Send data to UTMify API after successful Zapier submission, using the same timestamp for both
-  await sendOrderToUtmify(validationResult.data, uniqueOrderId, formattedTimestamp);
-  await sendUtmifyConversion(validationResult.data, uniqueOrderId, formattedTimestamp);
+  await sendOrderToUtmify(validationResult.data, uniqueOrderId);
+  await sendUtmifyConversion(validationResult.data, uniqueOrderId);
 
 
   return { success: true };
