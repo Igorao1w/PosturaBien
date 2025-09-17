@@ -64,13 +64,11 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-async function sendOrderToUtmify(formData: OrderFormData, timestamp: string) {
+async function sendOrderToUtmify(formData: OrderFormData, orderId: string, timestamp: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders?token=${utmifyApiToken}`;
   const headerList = headers();
   const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
-
-  const orderId = "FORM-" + Date.now();
   
   const products = [
     {
@@ -153,9 +151,9 @@ async function sendOrderToUtmify(formData: OrderFormData, timestamp: string) {
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData, timestamp: string) {
+async function sendUtmifyConversion(values: OrderFormData, orderId: string, timestamp: string) {
   const payload = {
-    orderId: "FORM-" + Date.now(),
+    orderId: orderId,
     platform: "firebase_form",
     paymentMethod: "cash_on_delivery",
     status: "paid",
@@ -187,7 +185,8 @@ async function sendUtmifyConversion(values: OrderFormData, timestamp: string) {
     if (response.ok) {
       console.log("Venda registrada na UTMfy 🚀");
     } else {
-      console.error("UTMify API Error:", await response.json());
+      const errorBody = await response.json();
+      console.error("UTMify API Error:", response.status, JSON.stringify(errorBody, null, 2));
     }
   } catch (error) {
     console.error("Network error sending to UTMify:", error);
@@ -223,6 +222,8 @@ export async function submitOrder(
   const getPart = (type: string) => parts.find(p => p.type === type)?.value || '';
   const formattedTimestamp = `${getPart('year')}-${getPart('month')}-${getPart('day')} ${getPart('hour')}:${getPart('minute')}:${getPart('second')}`;
 
+  const uniqueOrderId = `FORM-${randomUUID()}`;
+
   try {
     const response = await fetch(webhookUrl, {
       method: 'POST',
@@ -249,8 +250,8 @@ export async function submitOrder(
   console.log("Order submitted to Zapier:", validationResult.data);
   
   // Send data to UTMify API after successful Zapier submission, using the same timestamp for both
-  await sendOrderToUtmify(validationResult.data, formattedTimestamp);
-  await sendUtmifyConversion(validationResult.data, formattedTimestamp);
+  await sendOrderToUtmify(validationResult.data, uniqueOrderId, formattedTimestamp);
+  await sendUtmifyConversion(validationResult.data, uniqueOrderId, formattedTimestamp);
 
 
   return { success: true };
