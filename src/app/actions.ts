@@ -1,3 +1,4 @@
+
 'use server';
 
 import { personalizeTestimonial, PersonalizeTestimonialInput, PersonalizeTestimonialOutput } from '@/ai/flows/personalize-testimonial';
@@ -70,7 +71,23 @@ async function sendOrderToUtmify(formData: OrderFormData) {
   const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
 
   const orderId = "FORM-" + Date.now();
-  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  
+  // Generate timestamp in 'America/Bogota' (COT) timezone
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+  const parts = formatter.formatToParts(now);
+  const getPart = (type: string) => parts.find(p => p.type === type)?.value || '';
+  const formattedNow = `${getPart('year')}-${getPart('month')}-${getPart('day')} ${getPart('hour')}:${getPart('minute')}:${getPart('second')}`;
+
 
   const products = [
     {
@@ -102,8 +119,8 @@ async function sendOrderToUtmify(formData: OrderFormData) {
     platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
-    createdAt: now,
-    approvedDate: now,
+    createdAt: formattedNow,
+    approvedDate: formattedNow,
     refundedAt: null,
     customer: {
       name: formData.fullName,
@@ -241,3 +258,5 @@ export async function submitOrder(
 
   return { success: true };
 }
+
+    
