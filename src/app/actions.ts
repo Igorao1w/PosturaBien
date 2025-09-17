@@ -64,7 +64,7 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-async function sendOrderToUtmify(formData: OrderFormData, orderId: string, timestamp: string) {
+async function sendOrderToUtmify(formData: OrderFormData, orderId: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders?token=${utmifyApiToken}`;
   const headerList = headers();
@@ -100,8 +100,6 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string, times
     platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
-    createdAt: timestamp,
-    approvedDate: timestamp,
     refundedAt: null,
     customer: {
       name: formData.fullName,
@@ -151,14 +149,12 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string, times
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData, orderId: string, timestamp: string) {
+async function sendUtmifyConversion(values: OrderFormData, orderId: string) {
   const payload = {
     orderId: orderId,
     platform: "firebase_form",
     paymentMethod: "cash_on_delivery",
     status: "paid",
-    createdAt: timestamp,
-    approvedDate: timestamp,
     customer: {
       name: values.fullName,
       email: `${values.whatsapp}@email.com`,
@@ -207,19 +203,6 @@ export async function submitOrder(
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
   
   const uniqueOrderId = `FORM-${randomUUID()}`;
-  
-  const now = new Date();
-  const timestamp = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'UTC', // Correct timezone as per documentation
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-  }).format(now).replace(/, /g, ' ').replace(/\//g, '-');
-
 
   try {
     const response = await fetch(webhookUrl, {
@@ -246,11 +229,9 @@ export async function submitOrder(
   
   console.log("Order submitted to Zapier:", validationResult.data);
   
-  await sendOrderToUtmify(validationResult.data, uniqueOrderId, timestamp);
-  await sendUtmifyConversion(validationResult.data, uniqueOrderId, timestamp);
+  await sendOrderToUtmify(validationResult.data, uniqueOrderId);
+  await sendUtmifyConversion(validationResult.data, uniqueOrderId);
 
 
   return { success: true };
 }
-
-    
