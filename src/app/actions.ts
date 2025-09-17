@@ -65,7 +65,7 @@ const OrderFormSchema = z.object({
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
 async function sendOrderToUtmify(formData: OrderFormData) {
-  const utmifyApiToken = 'foNPekl8GfmVjd3ttVRczxDwPXBV5Thspwh6';
+  const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = 'https://api.utmify.com.br/api-credentials/orders';
   const headerList = headers();
   const userIp = headerList.get('x-forwarded-for') || '0.0.0.0';
