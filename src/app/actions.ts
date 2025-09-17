@@ -64,16 +64,46 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-function getUTCDateString() {
+function getUTCDateTimeStringWithBuffer(): string {
   const now = new Date();
+  // Add a 5-second buffer to account for potential clock skew or network latency
+  now.setSeconds(now.getSeconds() + 5);
+  
   const year = now.getUTCFullYear();
   const month = (now.getUTCMonth() + 1).toString().padStart(2, '0');
   const day = now.getUTCDate().toString().padStart(2, '0');
   const hours = now.getUTCHours().toString().padStart(2, '0');
   const minutes = now.getUTCMinutes().toString().padStart(2, '0');
   const seconds = now.getUTCSeconds().toString().padStart(2, '0');
+  
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+
+async function sendToZapierWebhook(formData: OrderFormData, orderId: string) {
+    const zapierWebhookUrl = 'https://hooks.zapier.com/hooks/catch/19515908/2s0wylj/';
+    const payload = {
+        orderId: orderId,
+        ...formData
+    };
+    try {
+        const response = await fetch(zapierWebhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            console.error('Zapier Webhook Error:', response.status, await response.text());
+        } else {
+            console.log('Order successfully sent to Zapier Webhook.');
+        }
+    } catch (error) {
+        console.error('Error sending data to Zapier Webhook:', error);
+    }
+}
+
 
 async function sendOrderToUtmify(formData: OrderFormData, orderId: string, utcTimestamp: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
@@ -216,21 +246,21 @@ export async function submitOrder(
   }
   
   const uniqueOrderId = `FORM-${randomUUID()}`;
-  const utcTimestamp = getUTCDateString();
+  const utcTimestamp = getUTCDateTimeStringWithBuffer();
 
   try {
-    // UTMify calls are now the primary action.
+    await sendToZapierWebhook(validationResult.data, uniqueOrderId);
     await sendOrderToUtmify(validationResult.data, uniqueOrderId, utcTimestamp);
     await sendUtmifyConversion(validationResult.data, uniqueOrderId, utcTimestamp);
   } catch (error) {
-      console.error('An unexpected error occurred during UTMify submission:', error);
+      console.error('An unexpected error occurred during submission process:', error);
       if (error instanceof Error && 'cause' in error && (error.cause as any)?.code === 'ENOTFOUND') {
            return { success: false, error: 'Ocurrió un error de red. Por favor, revisa tu conexión a internet e inténtalo de nuevo.' };
       }
       return { success: false, error: 'Ocurrió un error inesperado al enviar tu pedido. Por favor, inténtelo de nuevo más tarde.' };
   }
   
-  console.log("Order submitted to UTMify with ID:", uniqueOrderId);
+  console.log("Order submitted with ID:", uniqueOrderId);
 
   return { success: true };
 }
