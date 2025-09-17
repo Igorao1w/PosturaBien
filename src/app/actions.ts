@@ -64,7 +64,7 @@ const OrderFormSchema = z.object({
 
 type OrderFormData = z.infer<typeof OrderFormSchema>;
 
-async function sendOrderToUtmify(formData: OrderFormData) {
+async function sendOrderToUtmify(formData: OrderFormData, timestamp: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders?token=${utmifyApiToken}`;
   const headerList = headers();
@@ -72,23 +72,6 @@ async function sendOrderToUtmify(formData: OrderFormData) {
 
   const orderId = "FORM-" + Date.now();
   
-  // Generate timestamp in 'America/Bogota' (COT) timezone
-  const now = new Date();
-  const formatter = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Bogota',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
-  const parts = formatter.formatToParts(now);
-  const getPart = (type: string) => parts.find(p => p.type === type)?.value || '';
-  const formattedNow = `${getPart('year')}-${getPart('month')}-${getPart('day')} ${getPart('hour')}:${getPart('minute')}:${getPart('second')}`;
-
-
   const products = [
     {
       id: "CORRECTOR01",
@@ -119,8 +102,8 @@ async function sendOrderToUtmify(formData: OrderFormData) {
     platform: "PosturaBien",
     paymentMethod: "free_price",
     status: "paid",
-    createdAt: formattedNow,
-    approvedDate: formattedNow,
+    createdAt: timestamp,
+    approvedDate: timestamp,
     refundedAt: null,
     customer: {
       name: formData.fullName,
@@ -170,14 +153,14 @@ async function sendOrderToUtmify(formData: OrderFormData) {
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData) {
+async function sendUtmifyConversion(values: OrderFormData, timestamp: string) {
   const payload = {
     orderId: "FORM-" + Date.now(),
     platform: "firebase_form",
     paymentMethod: "cash_on_delivery",
     status: "paid",
-    createdAt: new Date().toISOString(),
-    approvedDate: new Date().toISOString(),
+    createdAt: timestamp,
+    approvedDate: timestamp,
     customer: {
       name: values.fullName,
       email: `${values.whatsapp}@email.com`,
@@ -224,6 +207,22 @@ export async function submitOrder(
   
   const webhookUrl = 'https://hooks.zapier.com/hooks/catch/24459468/uhppq43/';
   
+  // Generate a single, reliable timestamp in the correct timezone
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+  const parts = formatter.formatToParts(now);
+  const getPart = (type: string) => parts.find(p => p.type === type)?.value || '';
+  const formattedTimestamp = `${getPart('year')}-${getPart('month')}-${getPart('day')} ${getPart('hour')}:${getPart('minute')}:${getPart('second')}`;
+
   try {
     const response = await fetch(webhookUrl, {
       method: 'POST',
@@ -249,10 +248,9 @@ export async function submitOrder(
   
   console.log("Order submitted to Zapier:", validationResult.data);
   
-  // Send data to UTMify API after successful Zapier submission
-  await sendOrderToUtmify(validationResult.data);
-  // Send conversion data to UTMify
-  await sendUtmifyConversion(validationResult.data);
+  // Send data to UTMify API after successful Zapier submission, using the same timestamp for both
+  await sendOrderToUtmify(validationResult.data, formattedTimestamp);
+  await sendUtmifyConversion(validationResult.data, formattedTimestamp);
 
 
   return { success: true };
