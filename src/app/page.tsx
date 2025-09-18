@@ -12,8 +12,14 @@ import PersonalizedTestimonial from '@/components/landing/PersonalizedTestimonia
 import CTA from '@/components/landing/CTA';
 import FAQ from '@/components/landing/FAQ';
 import Footer from '@/components/landing/Footer';
-import OrderDialog from '@/components/landing/OrderDialog';
 import SizeGuide from '@/components/landing/SizeGuide';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const OrderDialog = dynamic(() => import('@/components/landing/OrderDialog'), {
+  ssr: false,
+  loading: () => <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center"><Skeleton className="w-full max-w-lg h-[90vh] rounded-xl" /></div>
+});
 
 declare global {
   interface Window {
@@ -64,7 +70,7 @@ export default function Home() {
         <SizeGuide />
       </main>
       <Footer />
-      <OrderDialog open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen} />
+      {isOrderSheetOpen && <OrderDialog open={isOrderSheetOpen} onOpenChange={setIsOrderSheetOpen} />}
     </div>
   );
 }
