@@ -7,7 +7,7 @@ import { Inter } from 'next/font/google';
 
 const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional',
   variable: '--font-inter',
 });
 
@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.variable}>
       <head>
+        <link rel="preload" href="https://cdn.utmify.com/br/scripts/pixel/pixel.js" as="script" />
         <Script id="utmify-pixel" strategy="afterInteractive">
           {`
             window.pixelId = "68c8a0c49fa18ce3cc6f6e0a";

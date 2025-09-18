@@ -1,8 +1,10 @@
+
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const usageSteps = [
   {
@@ -70,18 +72,19 @@ export default function Usage() {
                 onClick={() => handleStepClick(item.step)}
               >
                 <CardContent className="p-0 text-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={imageSrc}
                     alt={item.title}
+                    width={400}
+                    height={400}
                     className="w-full h-auto"
                     data-ai-hint={item.aiHint}
+                    unoptimized={item.isGif}
                   />
                   <div className="p-6">
                     <p className="text-primary font-bold text-lg mb-2">Paso {item.step}</p>
                     <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
-
                   </div>
                 </CardContent>
               </Card>
