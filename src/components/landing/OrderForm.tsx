@@ -377,7 +377,3 @@ export function OrderConfirmation() {
         </div>
     )
 }
-
-    
-
-    

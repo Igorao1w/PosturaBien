@@ -47,6 +47,8 @@ const OrderFormSchema = z.object({
     message: 'Por favor, ingresa tu nombre y apellido.',
   }),
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
+  departamento: z.string().min(3, 'El departamento es obligatorio.'),
+  ciudad: z.string().min(3, 'La ciudad es obligatoria.'),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   size: z.string({ required_error: "Por favor, selecciona una talla." }).min(1, "Por favor, selecciona una talla."),
   additionalInfo: z.string().optional(),
@@ -105,7 +107,7 @@ async function sendToZapierWebhook(formData: OrderFormData, orderId: string) {
 }
 
 
-async function sendOrderToUtmify(formData: OrderFormData, orderId: string, utcTimestamp: string) {
+async function sendOrderToUtmify(formData: Omit<OrderFormData, 'departamento' | 'ciudad'>, orderId: string, utcTimestamp: string) {
   const utmifyApiToken = 'Kxg5AE6px0i8XfEfOIBO14JwwqsHpbQw2V0f';
   const utmifyEndpoint = `https://api.utmify.com.br/api-credentials/orders`;
   const headerList = headers();
@@ -193,7 +195,7 @@ async function sendOrderToUtmify(formData: OrderFormData, orderId: string, utcTi
   }
 }
 
-async function sendUtmifyConversion(values: OrderFormData, orderId: string, utcTimestamp: string) {
+async function sendUtmifyConversion(values: Omit<OrderFormData, 'departamento' | 'ciudad'>, orderId: string, utcTimestamp: string) {
   const payload = {
     orderId: orderId,
     platform: "firebase_form",
@@ -248,10 +250,12 @@ export async function submitOrder(
   const uniqueOrderId = `FORM-${randomUUID()}`;
   const utcTimestamp = getUTCDateTimeStringWithBuffer();
 
+  const { departamento, ciudad, ...utmifyData } = validationResult.data;
+
   try {
     await sendToZapierWebhook(validationResult.data, uniqueOrderId);
-    await sendOrderToUtmify(validationResult.data, uniqueOrderId, utcTimestamp);
-    await sendUtmifyConversion(validationResult.data, uniqueOrderId, utcTimestamp);
+    await sendOrderToUtmify(utmifyData, uniqueOrderId, utcTimestamp);
+    await sendUtmifyConversion(utmifyData, uniqueOrderId, utcTimestamp);
   } catch (error) {
       console.error('An unexpected error occurred during submission process:', error);
       if (error instanceof Error && 'cause' in error && (error.cause as any)?.code === 'ENOTFOUND') {
