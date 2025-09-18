@@ -23,6 +23,8 @@ const formSchema = z.object({
     message: 'Por favor, ingresa tu nombre y apellido.',
   }),
   whatsapp: z.string().min(10, 'El número de WhatsApp debe tener 10 dígitos.').max(10, 'El número de WhatsApp debe tener 10 dígitos.').regex(/^3\d{9}$/, 'El número de WhatsApp debe empezar por 3 y tener 10 dígitos.'),
+  departamento: z.string().min(3, { message: 'El departamento es obligatorio.' }),
+  ciudad: z.string().min(3, { message: 'La ciudad es obligatoria.' }),
   address: z.string().min(10, 'La dirección debe tener al menos 10 caracteres.'),
   size: z.string({ required_error: "Por favor, selecciona una talla." }).min(1, "Por favor, selecciona una talla."),
   additionalInfo: z.string().optional(),
@@ -80,6 +82,8 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
     defaultValues: {
       fullName: '',
       whatsapp: '',
+      departamento: '',
+      ciudad: '',
       address: '',
       size: undefined,
       additionalInfo: '',
@@ -177,6 +181,30 @@ export default function OrderForm({ onSuccess }: OrderFormProps) {
             <FormItem>
               <FormControl>
                 <InputField field={field} placeholder="📱 3XX XXX XXXX" icon="📱" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="departamento"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <InputField field={field} placeholder="🗺️ Departamento" icon="🗺️" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="ciudad"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <InputField field={field} placeholder="🏙️ Ciudad" icon="🏙️" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -349,3 +377,5 @@ export function OrderConfirmation() {
         </div>
     )
 }
+
+    
