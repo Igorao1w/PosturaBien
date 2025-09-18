@@ -9,17 +9,17 @@ const usageSteps = [
     step: 1,
     title: 'Póntelo Fácilmente',
     description: 'Desliza el corrector sobre tus hombros como si fuera una mochila y abróchate el cinturón.',
-    image: 'https://i.postimg.cc/8cHhSwC7/20250806-220301-0001.gif',
+    image: 'https://i.postimg.cc/dQgRqqt9/Captura-de-tela-2025-09-18-123628.jpg',
     aiHint: 'person putting on brace',
-    duration: 3000,
+    isGif: false,
   },
   {
     step: 2,
     title: 'Ajusta las Correas',
     description: 'Tira de las correas para ajustar el nivel de tensión hasta que sientas tus hombros suavemente hacia atrás.',
-    image: 'https://i.postimg.cc/g26nyNP3/20250806-221402-0002.gif',
+    image: 'https://i.postimg.cc/fRC00ZZp/Captura-de-tela-2025-09-18-123612.jpg',
     aiHint: 'adjusting straps posture corrector',
-    duration: 3000,
+    isGif: false,
   },
   {
     step: 3,
@@ -27,59 +27,24 @@ const usageSteps = [
     description: 'Disfruta de una postura correcta y sin dolor. Úsalo de 1 a 2 horas diarias para obtener mejores resultados.',
     image: 'https://i.postimg.cc/6QX5rKcN/20250806-221934-0003.gif',
     aiHint: 'person standing straight',
-    duration: 3000,
+    isGif: true,
   },
 ];
 
 export default function Usage() {
-  const sectionRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(1);
-  const [isInView, setIsInView] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      {
-        threshold: 0.5, // Trigger when 50% of the section is visible
-      }
-    );
-
-    const currentRef = sectionRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isInView && isClient) {
-      const currentStepDuration = usageSteps.find(s => s.step === activeStep)?.duration || 3000;
-      timer = setTimeout(() => {
-        setActiveStep((prevStep) => (prevStep % usageSteps.length) + 1);
-      }, currentStepDuration);
-    } else {
-        // When not in view, reset to the first step to be ready
-        setActiveStep(1);
-    }
-    return () => clearTimeout(timer);
-  }, [activeStep, isInView, isClient]);
-  
+  const handleStepClick = (step: number) => {
+    setActiveStep(step);
+  };
 
   return (
-    <section id="usage" className="py-16 sm:py-24" ref={sectionRef}>
+    <section id="usage" className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-primary">Tan Fácil Como Contar Hasta 3</h2>
@@ -90,17 +55,19 @@ export default function Usage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {usageSteps.map((item) => {
             const isActive = activeStep === item.step;
-            const imageSrc = isActive && isClient
-              ? `${item.image}?t=${Date.now()}` // Use Date.now() for unique key
+            // Re-trigger GIF animation only if it's the active step, it's a GIF, and client has mounted
+            const imageSrc = isActive && item.isGif && isClient
+              ? `${item.image}?t=${Date.now()}`
               : item.image;
             
             return (
               <Card 
                 key={item.step} 
                 className={cn(
-                  "overflow-hidden shadow-lg transition-all duration-500",
+                  "overflow-hidden shadow-lg transition-all duration-300 cursor-pointer",
                   isActive ? "scale-105 shadow-2xl ring-2 ring-primary" : "scale-100 opacity-80"
                 )}
+                onClick={() => handleStepClick(item.step)}
               >
                 <CardContent className="p-0 text-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
