@@ -30,7 +30,7 @@ export default function RootLayout({
             var a = document.createElement("script");
             a.setAttribute("async", "");
             a.setAttribute("defer", "");
-            a.setAttribute("src", "https://cdn.utmify.com/br/scripts/pixel/pixel.js");
+            a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
             document.head.appendChild(a);
           `}
         </Script>
