@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.variable}>
       <head>
+        {/* Pixel UTMify */}
         <Script id="utmify-pixel" strategy="afterInteractive">
           {`
             window.pixelId = "68c8a0c49fa18ce3cc6f6e0a";
@@ -34,6 +35,15 @@ export default function RootLayout({
             document.head.appendChild(a);
           `}
         </Script>
+
+        {/* UTMify Tracking */}
+        <Script
+          id="utmify-tracking"
+          src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+          data-utmify-prevent-xcod-sck
+          data-utmify-prevent-subids
+          strategy="afterInteractive"
+        />
       </head>
       <body className="font-body antialiased">
         {children}
