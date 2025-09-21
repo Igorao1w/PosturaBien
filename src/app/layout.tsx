@@ -34,6 +34,13 @@ export default function RootLayout({
             document.head.appendChild(a);
           `}
         </Script>
+        <Script
+          id="utmify-tracking"
+          src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+          data-utmify-prevent-xcod-sck
+          data-utmify-prevent-subids
+          strategy="afterInteractive"
+        ></Script>
       </head>
       <body className="font-body antialiased">
         {children}
